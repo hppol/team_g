@@ -13,28 +13,9 @@ public class Screen extends Canvas implements ComponentListener {
 	private Graphics bg;
 	private Image offScreen;
 	private Dimension dim;
-//	private Character ryu = new Character();
-	private int countNumber = 0;
 	
 	public Screen() {
 		addComponentListener(this);
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				repaint();
-				counting();
-			}
-		}, 0, 1);
-	}
-	public void counting() {
-		this.countNumber++;
-	}
-	
-	public int getCount() {
-		return this.countNumber;
 	}
 	
 	private void initBuffer() {
@@ -46,8 +27,6 @@ public class Screen extends Canvas implements ComponentListener {
 	@Override
 	public void paint(Graphics g) {
 		bg.clearRect(0, 0, dim.width, dim.height);
-		//~~~~
-//		ryu.draw(bg, this);
 		g.drawImage(offScreen, 0, 0, this);
 	}
 	
