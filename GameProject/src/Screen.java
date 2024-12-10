@@ -6,6 +6,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private boolean play = false; // 게임 실행 상태
     private boolean gameOver = false; // 게임 종료 상태
     private boolean gameStarted = false; // 게임 시작 상태
+    private boolean showStartMessage = false; // "Press Enter to Start" 메시지 표시 여부
     private int score = 0; // 점수
     private Timer timer;
     private int delay = 8;
@@ -20,9 +21,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     public Screen(JFrame frame) {
         this.frame = frame;
-        titlePanel = new Title(this);
+        titlePanel = new Title(this, frame); // Title 패널 생성
 
-        // 타이틀 화면 추가
         frame.getContentPane().add(titlePanel);
         frame.getContentPane().validate();
 
@@ -43,6 +43,12 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
     }
 
+    public void showPressEnterMessage() {
+        // "Press Enter to Start" 메시지 표시
+        showStartMessage = true;
+        repaint();
+    }
+
     public void startGameFromTitle() {
         frame.getContentPane().remove(titlePanel);
         frame.getContentPane().add(this);
@@ -50,21 +56,24 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         frame.getContentPane().repaint();
 
         this.requestFocusInWindow(); // 키보드 포커스 요청
+        showPressEnterMessage(); // "Press Enter to Start" 메시지 호출
     }
 
     public void paint(Graphics g) {
+        super.paint(g);
+
         // 배경
-        g.setColor(Color.black);
+        g.setColor(Color.BLACK);
         g.fillRect(1, 1, 692, 592);
 
         // 점수와 레벨
-        g.setColor(Color.white);
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Serif", Font.BOLD, 25));
         g.drawString("Score: " + score, 560, 30);
         g.drawString("Level: " + (levelManager != null ? levelManager.getCurrentLevelIndex() : 1), 30, 30);
 
         // 벽돌
-        if (map != null) { // map이 null인지 확인
+        if (map != null) {
             map.draw((Graphics2D) g);
         }
 
@@ -75,39 +84,35 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         ball.draw(g);
 
         // 게임 시작 메시지
-        if (!gameStarted && !gameOver) {
-            g.setColor(Color.white);
+        if (showStartMessage && !play && !gameOver) { // 게임 시작 메시지 조건
+            g.setColor(Color.WHITE);
             g.setFont(new Font("Serif", Font.BOLD, 30));
             g.drawString("Press Enter to Start", 200, 300);
         }
 
         // 게임 종료 메시지
-        if (gameOver) {
-            g.setColor(Color.red);
+        if (gameOver) { // 게임 종료 메시지 조건
+            g.setColor(Color.RED);
             g.setFont(new Font("Serif", Font.BOLD, 30));
             g.drawString("Game Over!", 260, 300);
 
             g.setFont(new Font("Serif", Font.BOLD, 20));
             g.drawString("Press Enter to Restart", 200, 350);
         }
-
-        g.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        timer.start();
-
         if (play) {
             ball.move();
 
             // 공과 패들 충돌
             if (ball.checkCollision(paddle)) {
-                ball.bounceOffPaddle(paddle); // 패들 위치에 따라 반사 각도 변경
+                ball.bounceOffPaddle(paddle);
             }
 
             // 공과 벽돌 충돌
-            if (map.hitBrick(ball)) { // Ball 객체를 전달
+            if (map != null && map.hitBrick(ball)) {
                 score += 5; // 점수 증가
             }
 
@@ -115,16 +120,18 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             if (ball.getY() > 570) {
                 play = false;
                 gameOver = true;
+                showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
             }
 
             // 모든 벽돌 제거 시 다음 레벨로 이동
-            if (map.isAllBricksDestroyed()) {
+            if (map != null && map.isAllBricksDestroyed()) {
                 if (levelManager.hasNextLevel()) {
                     levelManager.moveToNextLevel();
                     loadLevel();
                 } else {
                     play = false;
                     gameOver = true;
+                    showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
                 }
             }
         }
@@ -136,15 +143,15 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!gameStarted) {
-                startGameFromTitle(); // 타이틀에서 게임 시작
-                gameStarted = true; // 게임 시작 플래그 설정
-                loadLevel(); // 레벨 초기화
-                timer.start();
+                gameStarted = true;
                 play = true;
+                timer.start(); // 타이머 시작
+                loadLevel();
+                repaint();
             } else if (gameOver) {
-                resetGame(); // 게임 재시작
+                resetGame();
             } else {
-                play = true; // 게임 시작
+                play = true;
             }
         }
 
@@ -163,10 +170,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private void resetGame() {
         score = 0;
         gameOver = false;
-        levelManager = new LevelManager(); // 레벨 초기화
+        levelManager = new LevelManager();
         loadLevel();
-        ball.reset(); // 공 위치 초기화
+        ball.reset();
         play = true;
+        showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
     }
 
     @Override
