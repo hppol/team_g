@@ -1,13 +1,12 @@
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class Screen extends JPanel implements KeyListener, ActionListener {
     private boolean play = false; // 게임 실행 상태
     private boolean gameOver = false; // 게임 종료 상태
+    private boolean gameStarted = false; // 게임 시작 상태
     private int score = 0; // 점수
-
     private Timer timer;
     private int delay = 8;
 
@@ -16,24 +15,41 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private MapGenerator map;
     private LevelManager levelManager;
 
-    public Screen() {
+    private JFrame frame; // JFrame 참조
+    private Title titlePanel; // Title 패널
+
+    public Screen(JFrame frame) {
+        this.frame = frame;
+        titlePanel = new Title(this);
+
+        // 타이틀 화면 추가
+        frame.getContentPane().add(titlePanel);
+        frame.getContentPane().validate();
+
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(120, 350, 20, 2, -3);
         levelManager = new LevelManager();
-        loadLevel();
 
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
 
         timer = new Timer(delay, this);
-        timer.start();
     }
 
     private void loadLevel() {
         Level currentLevel = levelManager.getCurrentLevel();
         map = new MapGenerator(currentLevel.getBrickLayout());
         ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
+    }
+
+    public void startGameFromTitle() {
+        frame.getContentPane().remove(titlePanel);
+        frame.getContentPane().add(this);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+
+        this.requestFocusInWindow(); // 키보드 포커스 요청
     }
 
     public void paint(Graphics g) {
@@ -45,10 +61,12 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         g.setColor(Color.white);
         g.setFont(new Font("Serif", Font.BOLD, 25));
         g.drawString("Score: " + score, 560, 30);
-        g.drawString("Level: " + levelManager.getCurrentLevelIndex(), 30, 30);
+        g.drawString("Level: " + (levelManager != null ? levelManager.getCurrentLevelIndex() : 1), 30, 30);
 
         // 벽돌
-        map.draw((Graphics2D) g);
+        if (map != null) { // map이 null인지 확인
+            map.draw((Graphics2D) g);
+        }
 
         // 패들
         paddle.draw(g);
@@ -57,7 +75,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         ball.draw(g);
 
         // 게임 시작 메시지
-        if (!play && !gameOver) {
+        if (!gameStarted && !gameOver) {
             g.setColor(Color.white);
             g.setFont(new Font("Serif", Font.BOLD, 30));
             g.drawString("Press Enter to Start", 200, 300);
@@ -90,7 +108,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
             // 공과 벽돌 충돌
             if (map.hitBrick(ball)) { // Ball 객체를 전달
-                score += 5;           // 점수 증가
+                score += 5; // 점수 증가
             }
 
             // 공이 바닥에 닿으면 게임 종료
@@ -116,17 +134,26 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            paddle.moveRight();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            paddle.moveLeft();
-        }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (gameOver) {
+            if (!gameStarted) {
+                startGameFromTitle(); // 타이틀에서 게임 시작
+                gameStarted = true; // 게임 시작 플래그 설정
+                loadLevel(); // 레벨 초기화
+                timer.start();
+                play = true;
+            } else if (gameOver) {
                 resetGame(); // 게임 재시작
             } else {
                 play = true; // 게임 시작
+            }
+        }
+
+        if (play) {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                paddle.moveRight();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                paddle.moveLeft();
             }
         }
 
@@ -144,6 +171,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
     @Override
     public void keyTyped(KeyEvent e) {}
 }

@@ -10,11 +10,11 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        screen = new Screen(); // GamePlay 객체 초기화
+        screen = new Screen(this); // 현재 JFrame 객체(this)를 전달
         add(screen);
 
         screen.requestFocusInWindow(); // 포커스 요청
-        
+
         setVisible(true);
     }
 }
