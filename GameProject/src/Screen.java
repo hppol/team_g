@@ -16,16 +16,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private MapGenerator map;
     private LevelManager levelManager;
 
-    private JFrame frame; // JFrame 참조
-    private Title titlePanel; // Title 패널
-
     public Screen(JFrame frame) {
-        this.frame = frame;
-        titlePanel = new Title(this, frame); // Title 패널 생성
-
-        frame.getContentPane().add(titlePanel);
-        frame.getContentPane().validate();
-
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(120, 350, 20, 2, -3);
         levelManager = new LevelManager();
@@ -49,15 +40,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         repaint();
     }
 
-    public void startGameFromTitle() {
-        frame.getContentPane().remove(titlePanel);
-        frame.getContentPane().add(this);
-        frame.getContentPane().validate();
-        frame.getContentPane().repaint();
 
-        this.requestFocusInWindow(); // 키보드 포커스 요청
-        showPressEnterMessage(); // "Press Enter to Start" 메시지 호출
-    }
 
     public void paint(Graphics g) {
         super.paint(g);
