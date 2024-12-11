@@ -67,72 +67,28 @@ public class Title extends JPanel {
 
         add(titleLabel, BorderLayout.CENTER);
 
-        // 로그인 및 회원가입 UI 추가
+        // Game Start 버튼만 추가
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(Color.BLACK);
 
-        // Game Start 버튼
-        JButton gameStartButton = new JButton("Guest Mode");
-        styleButton(gameStartButton);
+        JButton gameStartButton = new JButton("Game Start");
+
+        // 글자 크기 설정
+        gameStartButton.setFont(new Font("Serif", Font.BOLD, 40)); // 글자 크기 70으로 설정
+        gameStartButton.setForeground(Color.WHITE); // 텍스트 색상 설정
+        gameStartButton.setBackground(Color.BLACK); // 버튼 배경색 설정
+        gameStartButton.setFocusPainted(false); // 버튼 포커스 제거
+        gameStartButton.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // 버튼 테두리 설정
+
+        // 버튼 위치 및 여백 조정
+        formPanel.setBorder(BorderFactory.createEmptyBorder(100, 0, 50, 0)); // 위, 좌, 아래, 우 여백 설정
+        gameStartButton.setAlignmentX(Component.CENTER_ALIGNMENT); // 버튼 중앙 정렬
+
         gameStartButton.addActionListener(e -> mainFrame.startGame()); // MainFrame의 startGame 호출
 
         formPanel.add(Box.createVerticalStrut(20));
         formPanel.add(gameStartButton);
-
-        // ID 입력 필드
-        JLabel idLabel = new JLabel("ID:");
-        idLabel.setForeground(Color.WHITE);
-        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JTextField idField = new JTextField();
-        idField.setMaximumSize(new Dimension(200, 30));
-
-        // 비밀번호 입력 필드
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setForeground(Color.WHITE);
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(200, 30));
-
-        // 버튼 패널
-        JPanel actionButtonPanel = new JPanel();
-        actionButtonPanel.setLayout(new BoxLayout(actionButtonPanel, BoxLayout.X_AXIS));
-        actionButtonPanel.setBackground(Color.BLACK);
-
-        // 로그인 버튼
-        JButton loginButton = new JButton("Login");
-        styleButton(loginButton);
-        loginButton.addActionListener(e -> {
-            String id = idField.getText();
-            String password = new String(passwordField.getPassword());
-            // 로그인 로직 추가
-            JOptionPane.showMessageDialog(this, "Login clicked: " + id);
-        });
-
-        // 회원가입 버튼
-        JButton signUpButton = new JButton("Sign Up");
-        styleButton(signUpButton);
-        signUpButton.addActionListener(e -> {
-            String id = idField.getText();
-            String password = new String(passwordField.getPassword());
-            // 회원가입 로직 추가
-            JOptionPane.showMessageDialog(this, "Sign Up clicked: " + id);
-        });
-
-        // 버튼 패널에 버튼 추가
-        actionButtonPanel.add(loginButton);
-        actionButtonPanel.add(Box.createHorizontalStrut(20)); // 버튼 간 간격
-        actionButtonPanel.add(signUpButton);
-
-        // 폼 패널에 추가
-        formPanel.add(Box.createVerticalStrut(20));
-        formPanel.add(idLabel);
-        formPanel.add(idField);
-        formPanel.add(Box.createVerticalStrut(10));
-        formPanel.add(passwordLabel);
-        formPanel.add(passwordField);
-        formPanel.add(Box.createVerticalStrut(20));
-        formPanel.add(actionButtonPanel);
 
         add(formPanel, BorderLayout.SOUTH);
     }
@@ -185,19 +141,19 @@ public class Title extends JPanel {
         }
     }
 
-	public MainFrame getMainFrame() {
-		return mainFrame;
-	}
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
 
-	public void setMainFrame(MainFrame mainFrame) {
-		this.mainFrame = mainFrame;
-	}
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
 
-	public BufferedImage getBrickImage() {
-		return brickImage;
-	}
+    public BufferedImage getBrickImage() {
+        return brickImage;
+    }
 
-	public void setBrickImage(BufferedImage brickImage) {
-		this.brickImage = brickImage;
-	}
+    public void setBrickImage(BufferedImage brickImage) {
+        this.brickImage = brickImage;
+    }
 }
