@@ -41,7 +41,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
         timer = new Timer(delay, this);
         music = new Music();
-        music.bgplay();
+        music.playRandomSong();
         
     }
 
