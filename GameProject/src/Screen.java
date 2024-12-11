@@ -1,3 +1,5 @@
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 import javazoom.jl.player.Player;
@@ -5,6 +7,7 @@ import javazoom.jl.player.Player;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 
 public class Screen extends JPanel implements KeyListener, ActionListener {
@@ -41,7 +44,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
         timer = new Timer(delay, this);
         music = new Music();
-        music.playRandomSong();
+//        music.playRandomSong();
         
     }
 
@@ -219,9 +222,13 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (play) {
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paddle.moveRight();
+                File file = new File("res/light-punch.wav");
+    			playPunchSound(file);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 paddle.moveLeft();
+                File file = new File("res/light-punch.wav");
+    			playPunchSound(file);
             }
         }
         
@@ -263,6 +270,17 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             gameOver = true; // 모든 레벨 완료
         }
     }
+    
+    private void playPunchSound(File file) {
+		Clip clip = null;
+		try {
+			clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(file));
+			clip.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
     
 
 
