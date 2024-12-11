@@ -64,10 +64,18 @@ public void bgplay2() {
 public void playRandomSong() {
     Random rand = new Random();
     int songChoice = rand.nextInt(2);  // 0 또는 1이 랜덤으로 생성됨
-    if (songChoice == 0) {
-        bgplay1();  // RyuTheme.mp3 재생
-    } else {
-        bgplay2();  // guitar.mp3 재생
+
+    switch (songChoice) {
+        case 0:
+            bgplay1();  // RyuTheme.mp3 재생
+            break;
+        case 1:
+            bgplay2();  // guitar.mp3 재생
+            break;
+        default:
+            System.out.println("Error: Invalid song choice.");
+            break;
     }
 }
+
 }
