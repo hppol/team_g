@@ -5,7 +5,7 @@ public class MainFrame extends JFrame {
     private Title titlePanel;
 
     public MainFrame() {
-        setBounds(10, 10, 700, 600);
+        setBounds(10, 10, 700, 630);
         setTitle("Brick Breaker");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -14,6 +14,9 @@ public class MainFrame extends JFrame {
         // Title 화면 생성 및 추가
         titlePanel = new Title(this); // MainFrame 객체 전달
         add(titlePanel);
+        
+        Menu menu = new Menu();
+        setJMenuBar(menu.getMenuBar());
 
         setVisible(true); // JFrame 표시
     }
