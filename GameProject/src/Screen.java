@@ -10,6 +10,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private int score = 0; // 점수
     private Timer timer;
     private int delay = 8;
+    
+    private LifeSystem lifeSystem;
+    private int lives;
+    private boolean isPaddleGrown = false; // 페달 크기 증가 상태
+
 
     private Paddle paddle;
     private Ball ball;
@@ -17,6 +22,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private LevelManager levelManager;
 
     public Screen(JFrame frame) {
+    	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(120, 350, 20, 2, -3);
         levelManager = new LevelManager();
@@ -33,6 +39,33 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         map = new MapGenerator(currentLevel.getBrickLayout());
         ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
     }
+    
+    private void handleBallOutOfBounds() {
+        lives--; // 생명 감소
+        if (lives <= 0) {
+            play = false;
+            gameOver = true; // 게임 종료
+        } else {
+            resetBallAndPaddle(); // 공과 패들 위치 초기화
+        }
+    }
+    
+    private void resetBallAndPaddle() {
+        ball.reset();
+        paddle.reset();
+    }
+    
+    private void resetItemEffects() {
+        isPaddleGrown = false;
+
+        // 페달 크기를 기본 크기로 초기화
+        paddle.resetSize();
+
+        // 공 속도를 기본 속도로 초기화
+        ball.setSpeed(2, -3); // 기본 속도 설정
+    }
+
+
 
     public void showPressEnterMessage() {
         // "Press Enter to Start" 메시지 표시
@@ -52,6 +85,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         // 점수와 레벨
         g.setColor(Color.WHITE);
         g.setFont(new Font("Serif", Font.BOLD, 25));
+        g.drawString("Lives: " + lives, 200, 30);
         g.drawString("Score: " + score, 560, 30);
         g.drawString("Level: " + (levelManager != null ? levelManager.getCurrentLevelIndex() : 1), 30, 30);
 
@@ -94,33 +128,66 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 ball.bounceOffPaddle(paddle);
             }
 
-            // 공과 벽돌 충돌
-            if (map != null && map.hitBrick(ball)) {
-                score += 5; // 점수 증가
+            // 공과 벽돌 또는 아이템 블록 충돌
+            int blockType = map.hitBrick(ball); // 블록 유형 반환
+            if (blockType == 1) {
+                score += 5; // 일반 벽돌 점수 증가
+            } else if (blockType == 2) {
+                paddle.grow(); // 아이템 블록: 페달 크기 증가
+            } else if (blockType == 3) {
+                triggerBombEffect(ball); // 폭탄 블록: 폭발 효과
             }
 
             // 공이 바닥에 닿으면 게임 종료
             if (ball.getY() > 570) {
-                play = false;
-                gameOver = true;
-                showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
+               handleBallOutOfBounds();
             }
 
             // 모든 벽돌 제거 시 다음 레벨로 이동
-            if (map != null && map.isAllBricksDestroyed()) {
+            if (map.isAllBricksDestroyed()) {
                 if (levelManager.hasNextLevel()) {
                     levelManager.moveToNextLevel();
                     loadLevel();
                 } else {
                     play = false;
                     gameOver = true;
-                    showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
                 }
+
             }
         }
 
         repaint();
     }
+    
+    private void triggerBombEffect(Ball ball) {
+        int ballX = ball.getX();
+        int ballY = ball.getY();
+        int ballDiameter = ball.getDiameter();
+
+        // 공의 중심 좌표를 계산
+        int centerX = ballX + ballDiameter / 2;
+        int centerY = ballY + ballDiameter / 2;
+
+        // 벽돌 배열에서 폭탄 블록의 행(row)과 열(col)을 계산
+        int bombRow = (centerY - 50) / map.brickHeight;
+        int bombCol = (centerX - 80) / map.brickWidth;
+
+        // 폭탄 블록 주변 3x3 범위를 정확히 탐색
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                int currentRow = bombRow + rowOffset;
+                int currentCol = bombCol + colOffset;
+
+                // 배열의 범위를 벗어나지 않는지 확인
+                if (currentRow >= 0 && currentRow < map.map.length &&
+                    currentCol >= 0 && currentCol < map.map[0].length) {
+                    // 위쪽 3칸 포함 모든 3x3 블록 제거
+                    map.map[currentRow][currentCol] = 0;
+                }
+            }
+        }
+    }
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -146,6 +213,20 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 paddle.moveLeft();
             }
         }
+        
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (gameOver) {
+                resetGame(); // 게임 재시작
+            } else {
+                play = true; // 게임 시작
+            }
+        }
+        
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N) {
+            moveToNextLevel();
+        }
+
+
 
         repaint();
     }
@@ -159,6 +240,19 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         play = true;
         showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
     }
+    
+    private void moveToNextLevel() {
+        if (levelManager.hasNextLevel()) {
+            levelManager.moveToNextLevel();
+            loadLevel();
+            ball.reset(); // 공 초기화
+            play = true; // 게임 시작 상태로 변경
+        } else {
+            play = false;
+            gameOver = true; // 모든 레벨 완료
+        }
+    }
+
 
     @Override
     public void keyReleased(KeyEvent e) {}

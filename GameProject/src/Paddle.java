@@ -27,6 +27,17 @@ public class Paddle {
             x -= 20;
         }
     }
+    
+    public void grow() {
+        width += 30; // 크기 증가
+        if (width > 200) {
+            width = 200; // 최대 크기 제한
+        }
+    }
+    
+    public void resetSize() {
+        width = 100; // 기본 크기
+    }
 
     public int getX() {
         return x;
@@ -43,4 +54,9 @@ public class Paddle {
     public int getHeight() {
         return height;
     }
+
+   public void reset() {
+      // TODO Auto-generated method stub
+      
+   }
 }

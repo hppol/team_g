@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 
 public class MapGenerator {
     public int[][] map;
+    public Paddle paddle;
     public int brickWidth;
     public int brickHeight;
 
@@ -34,7 +35,13 @@ public class MapGenerator {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] > 0) {
-                    g.setColor(Color.white);
+                    if (map[i][j] == 1) {
+                        g.setColor(Color.white); // 일반 벽돌
+                    } else if (map[i][j] == 2) {
+                        g.setColor(Color.blue); // 아이템 블록
+                    } else if (map[i][j] == 3) {
+                        g.setColor(Color.red); // 폭탄 블록
+                    }
                     g.fillRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
 
                     g.setStroke(new BasicStroke(3));
@@ -45,14 +52,16 @@ public class MapGenerator {
         }
     }
     
-    public boolean hitBrick(Ball ball) {
+
+    
+    public int hitBrick(Ball ball) {
         int ballX = ball.getX();
         int ballY = ball.getY();
         int ballDiameter = ball.getDiameter();
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] > 0) { // 벽돌이 활성화 상태일 때만
+                if (map[i][j] > 0) { // 벽돌 활성 상태
                     int brickX = j * brickWidth + 80;
                     int brickY = i * brickHeight + 50;
 
@@ -60,34 +69,22 @@ public class MapGenerator {
                     if (ballX + ballDiameter > brickX && ballX < brickX + brickWidth &&
                         ballY + ballDiameter > brickY && ballY < brickY + brickHeight) {
                         
-                        // 충돌한 벽돌 제거
-                        map[i][j] = 0;
-
                         // 충돌 방향 판별
-                        if (ballY + ballDiameter - ball.getSpeedY() <= brickY) {
-                            // 공이 벽돌의 위쪽에서 충돌
-                            ball.setY(brickY - ballDiameter);
-                            ball.reverseY();
-                        } else if (ballY - ball.getSpeedY() >= brickY + brickHeight) {
-                            // 공이 벽돌의 아래쪽에서 충돌
-                            ball.setY(brickY + brickHeight);
-                            ball.reverseY();
-                        } else if (ballX + ballDiameter - ball.getSpeedX() <= brickX) {
-                            // 공이 벽돌의 왼쪽에서 충돌
-                            ball.setX(brickX - ballDiameter);
-                            ball.reverseX();
-                        } else if (ballX - ball.getSpeedX() >= brickX + brickWidth) {
-                            // 공이 벽돌의 오른쪽에서 충돌
-                            ball.setX(brickX + brickWidth);
-                            ball.reverseX();
+                        if (ballY + ballDiameter - ball.getSpeedY() <= brickY ||
+                            ballY - ball.getSpeedY() >= brickY + brickHeight) {
+                            ball.reverseY(); // 위/아래에서 충돌
+                        } else {
+                            ball.reverseX(); // 좌/우에서 충돌
                         }
 
-                        return true; // 충돌 처리 완료
+                        int blockType = map[i][j]; // 블록 유형 저장
+                        map[i][j] = 0; // 블록 제거
+                        return blockType; // 블록 유형 반환
                     }
                 }
             }
         }
-        return false; // 충돌 없음
+        return 0; // 충돌 없음
     }
 
     // 모든 벽돌이 제거되었는지 확인
