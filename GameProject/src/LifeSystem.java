@@ -22,4 +22,8 @@ public class LifeSystem {
     public boolean isGameOver() {
         return lives <= 0;
     }
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
 }

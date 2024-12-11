@@ -20,4 +20,16 @@ public class Level {
     public int getBallSpeedY() {
         return ballSpeedY;
     }
+
+	public void setBrickLayout(int[][] brickLayout) {
+		this.brickLayout = brickLayout;
+	}
+
+	public void setBallSpeedX(int ballSpeedX) {
+		this.ballSpeedX = ballSpeedX;
+	}
+
+	public void setBallSpeedY(int ballSpeedY) {
+		this.ballSpeedY = ballSpeedY;
+	}
 }

@@ -106,4 +106,16 @@ public class Ball {
     public int getSpeedY() {
         return speedY;
     }
+
+	public void setDiameter(int diameter) {
+		this.diameter = diameter;
+	}
+
+	public void setSpeedX(int speedX) {
+		this.speedX = speedX;
+	}
+
+	public void setSpeedY(int speedY) {
+		this.speedY = speedY;
+	}
 }

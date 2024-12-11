@@ -50,4 +50,8 @@ public class Menu {
     public JMenuBar getMenuBar() {
         return menuBar;
     }
+
+	public void setMenuBar(JMenuBar menuBar) {
+		this.menuBar = menuBar;
+	}
 }

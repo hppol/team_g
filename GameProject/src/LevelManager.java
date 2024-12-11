@@ -60,4 +60,16 @@ public class LevelManager {
     public int getCurrentLevelIndex() {
         return currentLevelIndex + 1; // 1부터 시작하는 레벨 번호
     }
+
+	public List<Level> getLevels() {
+		return levels;
+	}
+
+	public void setLevels(List<Level> levels) {
+		this.levels = levels;
+	}
+
+	public void setCurrentLevelIndex(int currentLevelIndex) {
+		this.currentLevelIndex = currentLevelIndex;
+	}
 }

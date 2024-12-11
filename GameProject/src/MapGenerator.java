@@ -98,4 +98,36 @@ public class MapGenerator {
         }
         return true; // 모든 벽돌이 제거됨
     }
+
+	public int[][] getMap() {
+		return map;
+	}
+
+	public void setMap(int[][] map) {
+		this.map = map;
+	}
+
+	public Paddle getPaddle() {
+		return paddle;
+	}
+
+	public void setPaddle(Paddle paddle) {
+		this.paddle = paddle;
+	}
+
+	public int getBrickWidth() {
+		return brickWidth;
+	}
+
+	public void setBrickWidth(int brickWidth) {
+		this.brickWidth = brickWidth;
+	}
+
+	public int getBrickHeight() {
+		return brickHeight;
+	}
+
+	public void setBrickHeight(int brickHeight) {
+		this.brickHeight = brickHeight;
+	}
 }

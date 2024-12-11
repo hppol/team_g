@@ -184,4 +184,20 @@ public class Title extends JPanel {
             }
         }
     }
+
+	public MainFrame getMainFrame() {
+		return mainFrame;
+	}
+
+	public void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
+
+	public BufferedImage getBrickImage() {
+		return brickImage;
+	}
+
+	public void setBrickImage(BufferedImage brickImage) {
+		this.brickImage = brickImage;
+	}
 }

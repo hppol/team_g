@@ -32,4 +32,20 @@ public class MainFrame extends JFrame {
         repaint();
         screen.requestFocusInWindow(); // 포커스 요청
     }
+
+	public Screen getScreen() {
+		return screen;
+	}
+
+	public void setScreen(Screen screen) {
+		this.screen = screen;
+	}
+
+	public Title getTitlePanel() {
+		return titlePanel;
+	}
+
+	public void setTitlePanel(Title titlePanel) {
+		this.titlePanel = titlePanel;
+	}
 }
