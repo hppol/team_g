@@ -63,7 +63,7 @@ public class Title extends JPanel {
         titleLabel.setForeground(Color.WHITE);
 
         // 왼쪽 여백을 주기 위해 패딩 추가 (위쪽, 왼쪽, 아래쪽, 오른쪽)
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(200, 40, 0, 50)); // 왼쪽으로 50픽셀 이동
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(200, 90, 0, 50)); // 왼쪽으로 50픽셀 이동
 
         add(titleLabel, BorderLayout.CENTER);
 
