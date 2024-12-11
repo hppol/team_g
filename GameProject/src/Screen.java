@@ -1,6 +1,11 @@
 import javax.swing.*;
+
+import javazoom.jl.player.Player;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 
 public class Screen extends JPanel implements KeyListener, ActionListener {
     private boolean play = false; // 게임 실행 상태
@@ -32,6 +37,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
 
         timer = new Timer(delay, this);
+        
+        bgplay();
     }
 
     private void loadLevel() {
@@ -251,6 +258,29 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             play = false;
             gameOver = true; // 모든 레벨 완료
         }
+    }
+    private void bgplay() {
+    	 Player jlPlayer= null;
+    	 try{
+	    	 FileInputStream fileInputStream = new
+	    	 FileInputStream("res/RyuTheme.mp3");
+	    	 BufferedInputStream bufferedInputStream= new
+	    	 BufferedInputStream(fileInputStream);
+	    	 jlPlayer = new Player(bufferedInputStream);
+    	 } catch(Exception e) {
+    		 System.out.println(e.getMessage());
+    	 }
+    	        
+    	final Player player= jlPlayer;
+    	 new Thread() {
+	    	 public void run() {
+		    	 try {
+		    		 player.play();
+		    	 } catch (Exception e) {
+		    		 System.out.println(e.getMessage());         
+		    	 }
+	    	 }
+    	 }.start();
     }
 
 
