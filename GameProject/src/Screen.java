@@ -25,6 +25,9 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private Ball ball;
     private MapGenerator map;
     private LevelManager levelManager;
+    
+ // Music 객체 추가
+    private Music music;
 
     public Screen(JFrame frame) {
     	lives = 3;
@@ -37,8 +40,9 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
 
         timer = new Timer(delay, this);
+        music = new Music();
+        music.bgplay();
         
-        bgplay();
     }
 
     private void loadLevel() {
@@ -259,29 +263,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             gameOver = true; // 모든 레벨 완료
         }
     }
-    private void bgplay() {
-    	 Player jlPlayer= null;
-    	 try{
-	    	 FileInputStream fileInputStream = new
-	    	 FileInputStream("res/RyuTheme.mp3");
-	    	 BufferedInputStream bufferedInputStream= new
-	    	 BufferedInputStream(fileInputStream);
-	    	 jlPlayer = new Player(bufferedInputStream);
-    	 } catch(Exception e) {
-    		 System.out.println(e.getMessage());
-    	 }
-    	        
-    	final Player player= jlPlayer;
-    	 new Thread() {
-	    	 public void run() {
-		    	 try {
-		    		 player.play();
-		    	 } catch (Exception e) {
-		    		 System.out.println(e.getMessage());         
-		    	 }
-	    	 }
-    	 }.start();
-    }
+    
 
 
     @Override
