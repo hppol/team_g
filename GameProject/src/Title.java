@@ -26,11 +26,6 @@ public class Title extends JPanel {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBackground(Color.BLACK);
 
-        // Game Start 버튼
-        JButton gameStartButton = new JButton("Game Start");
-        styleButton(gameStartButton);
-        gameStartButton.addActionListener(e -> mainFrame.startGame()); // MainFrame의 startGame 호출
-
         // Help 버튼
         JButton helpButton = new JButton("Help");
         styleButton(helpButton);
@@ -58,9 +53,8 @@ public class Title extends JPanel {
         ));
 
         // 버튼 추가
-        buttonPanel.add(gameStartButton);
-        buttonPanel.add(Box.createVerticalStrut(20));
         buttonPanel.add(helpButton);
+        buttonPanel.add(Box.createVerticalStrut(20));
 
         add(buttonPanel, BorderLayout.WEST);
 
@@ -69,9 +63,78 @@ public class Title extends JPanel {
         titleLabel.setForeground(Color.WHITE);
 
         // 왼쪽 여백을 주기 위해 패딩 추가 (위쪽, 왼쪽, 아래쪽, 오른쪽)
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 50)); // 왼쪽으로 50픽셀 이동
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(200, 40, 0, 50)); // 왼쪽으로 50픽셀 이동
 
         add(titleLabel, BorderLayout.CENTER);
+
+        // 로그인 및 회원가입 UI 추가
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBackground(Color.BLACK);
+
+        // Game Start 버튼
+        JButton gameStartButton = new JButton("Guest Mode");
+        styleButton(gameStartButton);
+        gameStartButton.addActionListener(e -> mainFrame.startGame()); // MainFrame의 startGame 호출
+
+        formPanel.add(Box.createVerticalStrut(20));
+        formPanel.add(gameStartButton);
+
+        // ID 입력 필드
+        JLabel idLabel = new JLabel("ID:");
+        idLabel.setForeground(Color.WHITE);
+        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JTextField idField = new JTextField();
+        idField.setMaximumSize(new Dimension(200, 30));
+
+        // 비밀번호 입력 필드
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setForeground(Color.WHITE);
+        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPasswordField passwordField = new JPasswordField();
+        passwordField.setMaximumSize(new Dimension(200, 30));
+
+        // 버튼 패널
+        JPanel actionButtonPanel = new JPanel();
+        actionButtonPanel.setLayout(new BoxLayout(actionButtonPanel, BoxLayout.X_AXIS));
+        actionButtonPanel.setBackground(Color.BLACK);
+
+        // 로그인 버튼
+        JButton loginButton = new JButton("Login");
+        styleButton(loginButton);
+        loginButton.addActionListener(e -> {
+            String id = idField.getText();
+            String password = new String(passwordField.getPassword());
+            // 로그인 로직 추가
+            JOptionPane.showMessageDialog(this, "Login clicked: " + id);
+        });
+
+        // 회원가입 버튼
+        JButton signUpButton = new JButton("Sign Up");
+        styleButton(signUpButton);
+        signUpButton.addActionListener(e -> {
+            String id = idField.getText();
+            String password = new String(passwordField.getPassword());
+            // 회원가입 로직 추가
+            JOptionPane.showMessageDialog(this, "Sign Up clicked: " + id);
+        });
+
+        // 버튼 패널에 버튼 추가
+        actionButtonPanel.add(loginButton);
+        actionButtonPanel.add(Box.createHorizontalStrut(20)); // 버튼 간 간격
+        actionButtonPanel.add(signUpButton);
+
+        // 폼 패널에 추가
+        formPanel.add(Box.createVerticalStrut(20));
+        formPanel.add(idLabel);
+        formPanel.add(idField);
+        formPanel.add(Box.createVerticalStrut(10));
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
+        formPanel.add(Box.createVerticalStrut(20));
+        formPanel.add(actionButtonPanel);
+
+        add(formPanel, BorderLayout.SOUTH);
     }
 
     private void styleButton(JButton button) {
@@ -121,4 +184,4 @@ public class Title extends JPanel {
             }
         }
     }
-    }
+}
