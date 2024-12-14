@@ -19,6 +19,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private Timer timer;
     private Leaderboard leaderboard;
     private int delay = 8;
+    private int timeLeft = 60; // 타이머 시작 시간 (초 단위)
+    private Timer countdownTimer;
     
     private LifeSystem lifeSystem;
     private int lives;
@@ -66,6 +68,20 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         }
     }
     
+    public void startCountdown() {
+        countdownTimer = new Timer(1000, e -> { // 1초마다 실행
+            if (timeLeft > 0) {
+                timeLeft--; // 남은 시간 감소
+            } else {
+                play = false;
+                gameOver = true; // 시간이 끝나면 게임 종료
+                countdownTimer.stop(); // 타이머 중지
+            }
+            repaint(); // 화면 갱신
+        });
+        countdownTimer.start(); // 타이머 시작
+    }
+    
     private void resetBallAndPaddle() {
         ball.reset();
         paddle.reset();
@@ -104,6 +120,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         g.drawString("Lives: " + lives, 200, 30);
         g.drawString("Score: " + score, 560, 30);
         g.drawString("Level: " + (levelManager != null ? levelManager.getCurrentLevelIndex() : 1), 30, 30);
+        g.drawString("Time Left: " + timeLeft + "s", 300, 30); // 남은 시간 표시
 
         // 벽돌
         if (map != null) {
@@ -224,7 +241,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (play) {
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paddle.moveRight();
-                File file = new File("res/light-punch.wav");
+                File file = new File("res/bear.wav");
     			playBearSound(file);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -252,17 +269,22 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     }
 
     private void resetGame() {
-    	if (gameOver) {
-            System.out.println("Game over. Adding score: " + score);
+        if (gameOver) {
             leaderboard.addScore(score); // 점수 추가
         }
         score = 0;
         gameOver = false;
+        timeLeft = 60; // 타이머 초기화
         levelManager = new LevelManager();
         loadLevel();
         ball.reset();
         play = true;
-        showStartMessage = false; // "Press Enter to Start" 메시지 비활성화
+        showStartMessage = false;
+
+        if (countdownTimer != null) {
+            countdownTimer.stop(); // 기존 타이머 중지
+        }
+        startCountdown(); // 새로운 타이머 시작
     }
     
     private void moveToNextLevel() {

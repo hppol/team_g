@@ -49,7 +49,6 @@ public class Menu {
         fileMenu.add(newGameItem);
         fileMenu.addSeparator(); // 구분선 추가
         fileMenu.add(exitItem);
-        helpMenu.add(aboutItem);
         
         helpMenu.add(leaderboardItem);
         helpMenu.add(aboutItem);

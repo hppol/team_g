@@ -39,6 +39,7 @@ public class MainFrame extends JFrame {
         validate();
         repaint();
         screen.requestFocusInWindow(); // 포커스 요청
+        screen.startCountdown(); // 타이머 시작
     }
 
 	public Screen getScreen() {
