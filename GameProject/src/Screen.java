@@ -252,10 +252,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     }
 
     private void resetGame() {
-    	if (leaderboard == null) {
-            throw new IllegalArgumentException("Leaderboard cannot be null");
+    	if (gameOver) {
+            System.out.println("Game over. Adding score: " + score);
+            leaderboard.addScore(score); // 점수 추가
         }
-    	this.leaderboard = leaderboard;
         score = 0;
         gameOver = false;
         levelManager = new LevelManager();
