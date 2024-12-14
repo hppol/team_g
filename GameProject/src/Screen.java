@@ -224,7 +224,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (play) {
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paddle.moveRight();
-                File file = new File("res/bear.wav");
+                File file = new File("res/light-punch.wav");
     			playBearSound(file);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
