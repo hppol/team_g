@@ -4,12 +4,14 @@ import java.awt.event.*;
 public class Menu {
     private JMenuBar menuBar;
     private Leaderboard leaderboard; // 리더보드 객체
+    private ThemeManager themeManager;
 
-    public Menu(Leaderboard leaderboard) {
+    public Menu(Leaderboard leaderboard, ThemeManager themeManager) {
     	if (leaderboard == null) {
             throw new IllegalArgumentException("Leaderboard cannot be null");
         }
         this.leaderboard = leaderboard; // 리더보드 객체 초기화
+        this.themeManager = themeManager;
 
         // JMenuBar 생성
         menuBar = new JMenuBar();
@@ -26,8 +28,15 @@ public class Menu {
         JMenuItem exitItem = new JMenuItem("Exit");
         JMenuItem aboutItem = new JMenuItem("About");
         JMenuItem leaderboardItem = new JMenuItem("Leaderboard");
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenu themeMenu = new JMenu("Themes");
         
-        
+        for (String themeName : themeManager.getThemes().keySet()) {
+            JMenuItem themeItem = new JMenuItem(themeName);
+            themeItem.addActionListener((ActionEvent e) -> themeManager.setTheme(themeName));
+            themeMenu.add(themeItem);
+        }
+        settingsMenu.add(themeMenu);
 
         // 메뉴 아이템에 단축키와 툴팁 설정
         newGameItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
@@ -56,6 +65,7 @@ public class Menu {
         // 메뉴바에 메뉴 추가
         menuBar.add(fileMenu);
         menuBar.add(helpMenu);
+        menuBar.add(settingsMenu);
     }
 
     // JMenuBar 반환 메서드

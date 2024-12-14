@@ -8,9 +8,14 @@ import java.io.IOException;
 public class Title extends JPanel {
     private MainFrame mainFrame; // MainFrame 참조
     private BufferedImage brickImage; // 벽돌 이미지
+    private ThemeManager themeManager;
 
-    public Title(MainFrame mainFrame) {
+    public Title(MainFrame mainFrame, ThemeManager themeManager) {
         this.mainFrame = mainFrame;
+        this.themeManager = themeManager;
+        
+        setLayout(new BorderLayout());
+        setBackground(themeManager.getCurrentTheme().getBackgroundColor());
 
         // 이미지 로드
         try {
@@ -24,7 +29,7 @@ public class Title extends JPanel {
         // 버튼 패널 생성
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.setBackground(Color.BLACK);
+        buttonPanel.setBackground(themeManager.getCurrentTheme().getBackgroundColor());
 
         // Help 버튼
         JButton helpButton = new JButton("Help");
@@ -92,6 +97,11 @@ public class Title extends JPanel {
 
         add(formPanel, BorderLayout.SOUTH);
     }
+    
+    public void updateTheme() {
+        setBackground(themeManager.getCurrentTheme().getBackgroundColor());
+        repaint(); // 화면을 다시 그려 테마를 반영
+    }
 
     private void styleButton(JButton button) {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -107,7 +117,8 @@ public class Title extends JPanel {
         super.paintComponent(g);
 
         // 배경 그리기
-        g.setColor(Color.BLACK);
+
+        g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
         // 벽돌 이미지 여러 개 그리기
@@ -148,6 +159,7 @@ public class Title extends JPanel {
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
+    
 
     public BufferedImage getBrickImage() {
         return brickImage;

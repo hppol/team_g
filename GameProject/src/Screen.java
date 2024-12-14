@@ -31,11 +31,13 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private Ball ball;
     private MapGenerator map;
     private LevelManager levelManager;
+    private ThemeManager themeManager;
     
  // Music 객체 추가
     private Music music;
 
-    public Screen(JFrame frame, Leaderboard leaderboard) {
+    public Screen(JFrame frame, Leaderboard leaderboard, ThemeManager themeManager) {
+    	this.themeManager = themeManager;
     	this.leaderboard = leaderboard;
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
@@ -51,6 +53,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         music.playRandomSong();
         
     }
+    
 
     private void loadLevel() {
         Level currentLevel = levelManager.getCurrentLevel();
@@ -109,9 +112,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     public void paint(Graphics g) {
         super.paint(g);
+        
+        Theme currentTheme = themeManager.getCurrentTheme();
 
         // 배경
-        g.setColor(Color.BLACK);
+        g.setColor(currentTheme.getBackgroundColor());
         g.fillRect(1, 1, 692, 592);
 
         // 점수와 레벨

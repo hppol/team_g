@@ -44,13 +44,18 @@ public class Ball {
         // 패들의 중심점과 공의 중심점 차이 계산
         int paddleCenter = paddle.getX() + (paddle.getWidth() / 2);
         int ballCenter = x + (diameter / 2);
-        
 
-        // 반사 각도 조정: 공의 X축 속도를 패들 중심과의 거리로 결정
+        // 중심 거리 기반 반사 각도 계산
         int offset = ballCenter - paddleCenter; // 공과 패들 중심의 거리
-        speedX = (int) (offset * 0.1); // X축 속도는 거리 비례
-        speedY = -Math.abs(speedY);
-        normalizeSpeed(5); // 총 속도 크기를 5로 유지
+        double maxAngle = Math.PI / 3; // 최대 반사 각도 (60도)
+        double angle = maxAngle * (double) offset / (paddle.getWidth() / 2);
+
+        // 새로운 X축과 Y축 속도 계산
+        speedX = (int) (5 * Math.sin(angle)); // X축 속도
+        speedY = (int) (-5 * Math.cos(angle)); // Y축 속도 (항상 위로)
+
+        // 비정상적인 속도를 방지하기 위해 정규화
+        normalizeSpeed(5);
     }
 
     // 속도 크기 조정 메서드
