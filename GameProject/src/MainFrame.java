@@ -2,9 +2,18 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
     private Screen screen;
+    private Leaderboard leaderboard;
     private Title titlePanel;
 
     public MainFrame() {
+    	
+    	leaderboard = new Leaderboard();
+        Menu menu = new Menu(leaderboard);
+        setJMenuBar(menu.getMenuBar());
+        
+        Screen screen = new Screen(this, leaderboard); // Screen에 리더보드 전달
+        add(screen);
+    	
         setBounds(10, 10, 700, 630);
         setTitle("Brick Breaker");
         setResizable(false);
@@ -15,8 +24,7 @@ public class MainFrame extends JFrame {
         titlePanel = new Title(this); // MainFrame 객체 전달
         add(titlePanel);
         
-        Menu menu = new Menu();
-        setJMenuBar(menu.getMenuBar());
+        
 
         setVisible(true); // JFrame 표시
     }
@@ -25,7 +33,7 @@ public class MainFrame extends JFrame {
         remove(titlePanel); // Title 화면 제거
 
         // Screen 생성 및 추가
-        screen = new Screen(this);
+        screen = new Screen(this, leaderboard);
         add(screen);
 
         validate();
@@ -48,4 +56,5 @@ public class MainFrame extends JFrame {
 	public void setTitlePanel(Title titlePanel) {
 		this.titlePanel = titlePanel;
 	}
+	
 }

@@ -17,6 +17,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private boolean showStartMessage = false; // "Press Enter to Start" 메시지 표시 여부
     private int score = 0; // 점수
     private Timer timer;
+    private Leaderboard leaderboard;
     private int delay = 8;
     
     private LifeSystem lifeSystem;
@@ -32,7 +33,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
  // Music 객체 추가
     private Music music;
 
-    public Screen(JFrame frame) {
+    public Screen(JFrame frame, Leaderboard leaderboard) {
+    	this.leaderboard = leaderboard;
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(120, 350, 20, 2, -3);
@@ -250,6 +252,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     }
 
     private void resetGame() {
+    	if (leaderboard == null) {
+            throw new IllegalArgumentException("Leaderboard cannot be null");
+        }
+    	this.leaderboard = leaderboard;
         score = 0;
         gameOver = false;
         levelManager = new LevelManager();
