@@ -197,29 +197,47 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         int ballY = ball.getY();
         int ballDiameter = ball.getDiameter();
 
-        // 공의 중심 좌표를 계산
+        // 공의 중심 좌표 계산
         int centerX = ballX + ballDiameter / 2;
         int centerY = ballY + ballDiameter / 2;
 
         // 벽돌 배열에서 폭탄 블록의 행(row)과 열(col)을 계산
-        int bombRow = (centerY - 50) / map.brickHeight;
-        int bombCol = (centerX - 80) / map.brickWidth;
+        int bombRow = (centerY - 50) / map.brickHeight; // Y 오프셋: 50
+        int bombCol = (centerX - 80) / map.brickWidth;  // X 오프셋: 80
 
-        // 폭탄 블록 주변 3x3 범위를 정확히 탐색
-        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
-            for (int colOffset = -1; colOffset <= 1; colOffset++) {
-                int currentRow = bombRow + rowOffset;
-                int currentCol = bombCol + colOffset;
+        // 디버깅 출력 (폭탄 블록의 중심 좌표 확인)
+        System.out.println("Bomb Center: Row = " + bombRow + ", Col = " + bombCol);
 
-                // 배열의 범위를 벗어나지 않는지 확인
-                if (currentRow >= 0 && currentRow < map.map.length &&
-                    currentCol >= 0 && currentCol < map.map[0].length) {
-                    // 위쪽 3칸 포함 모든 3x3 블록 제거
+        // 3x3 범위의 정확한 좌표 지정
+        int[][] positions = {
+            {bombRow - 2, bombCol - 1}, {bombRow-2, bombCol }, {bombRow -2, bombCol +1}, // 위쪽
+            {bombRow-1, bombCol-1},     {bombRow -1, bombCol},     {bombRow -1, bombCol+1},     // 중간
+            {bombRow , bombCol - 1}, {bombRow, bombCol }, {bombRow , bombCol + 1}  // 아래쪽
+        };
+
+        // 각 위치의 벽돌 제거
+        for (int[] pos : positions) {
+            int currentRow = pos[0];
+            int currentCol = pos[1];
+
+            // 배열 경계 조건 확인
+            if (currentRow >= 0 && currentRow < map.map.length &&
+                currentCol >= 0 && currentCol < map.map[0].length) {
+
+                // 벽돌 제거
+                if (map.map[currentRow][currentCol] > 0) { // 벽돌이 있을 경우만 제거
                     map.map[currentRow][currentCol] = 0;
+                    System.out.println("Removing Brick at: Row = " + currentRow + ", Col = " + currentCol);
                 }
             }
         }
+
+        // 화면 갱신
+        repaint();
     }
+
+
+
 
 
     @Override
@@ -241,7 +259,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (play) {
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paddle.moveRight();
-                File file = new File("res/bear.wav");
+                File file = new File("res/light-punch.wav");
     			playBearSound(file);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
