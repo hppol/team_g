@@ -66,6 +66,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (lives <= 0) {
             play = false;
             gameOver = true; // 게임 종료
+            lives =3;
         } else {
             resetBallAndPaddle(); // 공과 패들 위치 초기화
         }
