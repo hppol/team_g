@@ -41,7 +41,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     	this.leaderboard = leaderboard;
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
-        ball = new Ball(120, 350, 20, 2, -3);
+        ball = new Ball(350, 520, 20, 2, -3);
         levelManager = new LevelManager();
 
         addKeyListener(this);
