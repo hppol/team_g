@@ -181,6 +181,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 
             } else if (blockType == 3) {
                 triggerBombEffect(ball); // 폭탄 블록: 폭발 효과
+                score += 15;
                 File file = new File("res/bomb.wav");
     			playBombSound(file);
             }
