@@ -34,9 +34,12 @@ public class MainFrame extends JFrame {
     public void startGame() {
         remove(titlePanel); // Title 화면 제거
 
+
         // Screen 생성 및 추가
         screen = new Screen(this, leaderboard, themeManager);
         add(screen);
+        
+        screen.showPressEnterMessage();
 
         validate();
         repaint();
