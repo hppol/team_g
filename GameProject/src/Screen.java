@@ -148,11 +148,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         // 게임 종료 메시지
         if (gameOver) { // 게임 종료 메시지 조건
             g.setColor(Color.RED);
-            g.setFont(new Font("Serif", Font.BOLD, 30));
-            g.drawString("Game Over!", 260, 300);
+            g.setFont(new Font("Serif", Font.BOLD, 50));
+            g.drawString("Game Over!", 200, 300);
 
-            g.setFont(new Font("Serif", Font.BOLD, 20));
-            g.drawString("Press Enter to Restart", 200, 350);
+            g.setFont(new Font("Serif", Font.BOLD, 30));
+            g.drawString("Press Enter to Restart", 190, 350);
         }
     }
 
@@ -232,7 +232,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 // 벽돌 제거
                 if (map.map[currentRow][currentCol] > 0) { // 벽돌이 있을 경우만 제거
                     map.map[currentRow][currentCol] = 0;
-                    System.out.println("Removing Brick at: Row = " + currentRow + ", Col = " + currentCol);
+//                    System.out.println("Removing Brick at: Row = " + currentRow + ", Col = " + currentCol);
                 }
             }
         }
@@ -265,7 +265,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paddle.moveRight();
                 File file = new File("res/light-punch.wav");
-    			playBearSound(file);
+    			playPunchSound(file);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 paddle.moveLeft();
