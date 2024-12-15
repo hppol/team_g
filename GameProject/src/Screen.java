@@ -168,12 +168,21 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
             // 공과 벽돌 또는 아이템 블록 충돌
             int blockType = map.hitBrick(ball); // 블록 유형 반환
+            
             if (blockType == 1) {
                 score += 5; // 일반 벽돌 점수 증가
+                File file = new File("res/break.wav");
+    			playBreakSound(file);
+                
+
+                
             } else if (blockType == 2) {
                 paddle.grow(); // 아이템 블록: 페달 크기 증가
+                
             } else if (blockType == 3) {
                 triggerBombEffect(ball); // 폭탄 블록: 폭발 효과
+                File file = new File("res/bomb.wav");
+    			playBombSound(file);
             }
 
             // 공이 바닥에 닿으면 게임 종료
@@ -333,7 +342,18 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 		}
 	}
     
-    private void playBearSound(File file) {
+    private void playBombSound(File file) {
+		Clip clip = null;
+		try {
+			clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(file));
+			clip.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    private void playBreakSound(File file) {
 		Clip clip = null;
 		try {
 			clip = AudioSystem.getClip();
