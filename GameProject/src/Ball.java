@@ -42,11 +42,12 @@ public class Ball {
 
     public void bounceOffPaddle(Paddle paddle) {
         // 패들의 중심점과 공의 중심점 차이 계산
-        int paddleCenter = paddle.getX() + (paddle.getWidth() / 2);
+    	int paddleCenter = paddle.getX() + (paddle.getWidth() / 2);
         int ballCenter = x + (diameter / 2);
+        
 
         // 중심 거리 기반 반사 각도 계산
-        int offset = ballCenter - paddleCenter; // 공과 패들 중심의 거리
+        int offset = ballCenter - paddleCenter;// 공과 패들 중심의 거리
         double maxAngle = Math.PI / 3; // 최대 반사 각도 (60도)
         double angle = maxAngle * (double) offset / (paddle.getWidth() / 2);
 
@@ -55,26 +56,32 @@ public class Ball {
         speedY = (int) (-5 * Math.cos(angle)); // Y축 속도 (항상 위로)
 
         // 비정상적인 속도를 방지하기 위해 정규화
-        normalizeSpeed(5);
+        normalizeSpeed(4);
     }
 
     // 속도 크기 조정 메서드
     private void normalizeSpeed(int totalSpeed) {
         double magnitude = Math.sqrt(speedX * speedX + speedY * speedY);
-        speedX = (int) (speedX / magnitude * totalSpeed);
-        speedY = (int) (speedY / magnitude * totalSpeed);
+        speedX = (int) Math.round(speedX / magnitude * totalSpeed);
+        speedY = (int) Math.round(speedY / magnitude * totalSpeed);
     }
+
 
     public void bounceOffBrick() {
         speedY = -speedY; // 벽돌에 충돌 시 Y축 방향 반전
+        normalizeSpeed(4); // 속도를 다시 정규화
     }
 
-    public void reset() {
-        x = 120;
-        y = 350;
-        speedX = 2;
-        speedY = -3;
+    public void reset(Paddle paddle) {
+        // 패들의 중앙에 공을 위치시키기 위해 설정
+        x = paddle.getX() + (paddle.getWidth() / 2) - (diameter / 2);  // 패들 중앙에 공 위치
+        y = paddle.getY() - diameter;  // 패들의 바로 위로 공 위치
+
+        speedX = 2;  // 초기 X 속도
+        speedY = -3; // 초기 Y 속도
     }
+
+
     
     public void reverseX() {
         speedX = -speedX;

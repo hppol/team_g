@@ -17,7 +17,7 @@ public class Paddle {
     }
 
     public void moveRight() {
-        if (x < 600) {
+        if (x < 570) {
             x += 20;
         }
     }

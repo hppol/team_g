@@ -40,6 +40,8 @@ public class MainFrame extends JFrame {
         add(screen);
         
         screen.showPressEnterMessage();
+        
+//        screen.startCountdown();
 
         validate();
         repaint();

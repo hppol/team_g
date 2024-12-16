@@ -41,7 +41,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     	this.leaderboard = leaderboard;
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
-        ball = new Ball(350, 520, 20, 2, -3);
+        ball = new Ball(350, 520, 20, 0, 0);
         levelManager = new LevelManager();
 
         addKeyListener(this);
@@ -52,6 +52,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         music = new Music();
         music.playRandomSong();
         
+//        startCountdown();
+        
     }
     
 
@@ -59,17 +61,6 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         Level currentLevel = levelManager.getCurrentLevel();
         map = new MapGenerator(currentLevel.getBrickLayout());
         ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
-    }
-    
-    private void handleBallOutOfBounds() {
-        lives--; // 생명 감소
-        if (lives <= 0) {
-            play = false;
-            gameOver = true; // 게임 종료
-            lives =3;
-        } else {
-            resetBallAndPaddle(); // 공과 패들 위치 초기화
-        }
     }
     
     public void startCountdown() {
@@ -86,11 +77,32 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         countdownTimer.start(); // 타이머 시작
     }
     
-    private void resetBallAndPaddle() {
-        ball.reset();
-        paddle.reset();
+    private void handleBallOutOfBounds() {
+        lives--; // 생명 감소
+        play = false;
+
+        // 생명이 다했으면 게임 종료
+        if (lives <= 0) {
+            play = false; // 게임 중지
+            gameOver = true; // 게임 오버 처리
+            lives = 3; // 생명 리셋
+        } else {
+            // 공과 패들 위치 초기화
+            resetBallAndPaddle();
+        }
     }
-    
+
+    // 공과 패들의 위치를 초기화하는 메서드
+    private void resetBallAndPaddle() {
+        // 공을 패들의 중앙 위치로 설정
+        ball.setX(paddle.getX() + (paddle.getWidth() / 2) - (ball.getDiameter() / 2));
+        ball.setY(paddle.getY() - ball.getDiameter()); // 공을 패들 바로 위에 위치하도록 설정
+
+        // 공의 속도를 설정 (필요에 따라 수정 가능)
+        ball.setSpeed(2, -3); // 예시로 X속도는 2, Y속도는 -3으로 설정
+    }
+
+
     private void resetItemEffects() {
         isPaddleGrown = false;
 
@@ -160,7 +172,9 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (play) {
-            ball.move();
+        	if (!gameOver) {
+                ball.move();
+            }
 
             // 공과 패들 충돌
             if (ball.checkCollision(paddle)) {
@@ -222,7 +236,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         int bombCol = (centerX - 80) / map.brickWidth;  // X 오프셋: 80
 
         // 디버깅 출력 (폭탄 블록의 중심 좌표 확인)
-        System.out.println("Bomb Center: Row = " + bombRow + ", Col = " + bombCol);
+//        System.out.println("Bomb Center: Row = " + bombRow + ", Col = " + bombCol);
 
         // 3x3 범위의 정확한 좌표 지정
         int[][] positions = {
@@ -263,10 +277,13 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 gameStarted = true;
                 play = true;
                 timer.start(); // 타이머 시작
+                startCountdown();
                 loadLevel();
                 repaint();
+                
             } else if (gameOver) {
                 resetGame();
+                
             } else {
                 play = true;
             }
@@ -296,6 +313,13 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N) {
             moveToNextLevel();
         }
+        
+        int keyCode = e.getKeyCode();
+        
+        if (keyCode == KeyEvent.VK_SPACE && !play) {
+            play = true; // 게임 시작
+            ball.setSpeed(2, -3); // 공의 속도 설정 (원하는 값으로 조정)
+        }
 
 
 
@@ -309,10 +333,15 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         score = 0;
         gameOver = false;
         timeLeft = 60; // 타이머 초기화
-        levelManager = new LevelManager();
-        loadLevel();
-        ball.reset();
-        play = true;
+        levelManager = new LevelManager();  // 레벨 초기화
+        loadLevel();  // 레벨 로드
+        paddle.reset();  // 패들 초기화
+
+        // 공 초기화 (패들 위치에 맞게 공의 위치를 설정)
+        // 패들의 중앙에 공을 위치시키기 위해 패들의 X 위치와 Y 위치를 조정
+        ball.reset(paddle); // Ball 객체에 패들 객체를 넘겨줌
+
+        play = false;
         showStartMessage = false;
 
         if (countdownTimer != null) {
@@ -320,18 +349,23 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         }
         startCountdown(); // 새로운 타이머 시작
     }
+
     
     private void moveToNextLevel() {
         if (levelManager.hasNextLevel()) {
             levelManager.moveToNextLevel();
             loadLevel();
-            ball.reset(); // 공 초기화
+            
+            // 공 초기화 (패들의 위치에서 시작하도록)
+            ball.reset(paddle);  // 공을 패들의 중앙 위치로 초기화
+            
             play = true; // 게임 시작 상태로 변경
         } else {
             play = false;
             gameOver = true; // 모든 레벨 완료
         }
     }
+
     
     private void playPunchSound(File file) {
 		Clip clip = null;
