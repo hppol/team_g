@@ -9,38 +9,40 @@ public class LevelManager {
         levels = new ArrayList<>();
         currentLevelIndex = 0;
 
-        // 레벨 1
+        // 일반 레벨 추가
         levels.add(new Level(
             new int[][]{
                 {1, 1, 1, 1, 3, 1, 1, 3, 1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {1, 1, 1, 3, 1, 1, 1, 1, 3},
             },
-            2, // 공의 X축 속도
-            -3 // 공의 Y축 속도
+            2, -3, null // 보스 없음
         ));
 
-        // 레벨 2
         levels.add(new Level(
             new int[][]{
                 {1, 0, 1, 0, 1, 0, 1},
                 {1, 1, 1, 1, 1, 1, 1},
                 {1, 0, 1, 0, 1, 0, 1}
             },
-            3, 
-            -3
+            3, -3, null // 보스 없음
         ));
 
-        // 레벨 3
+        // 보스 레벨 추가
         levels.add(new Level(
-            new int[][]{
-                {1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1}
-            },
-            4,
-            -4
-        ));
+        	    new int[1][1], // 1x1 배열로 설정 (실제로는 벽돌 없음)
+        	    4, -4,
+        	    new Boss(200, 100, 200, 50, 5) // 보스 정보
+        	));
+        
+        levels.add(new Level(
+                new int[][]{
+                    {1, 0, 1, 0, 1, 0, 1},
+                    {1, 1, 1, 1, 1, 1, 1},
+                    {1, 0, 1, 0, 1, 0, 1}
+                },
+                3, -3, null // 보스 없음
+            ));
     }
 
     public Level getCurrentLevel() {

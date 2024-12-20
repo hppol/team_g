@@ -22,11 +22,18 @@ public class MapGenerator {
 
     // 새 생성자: 벽돌 배열을 직접 받아 초기화
     public MapGenerator(int[][] layout) {
-        map = layout;
-        brickWidth = 540 / layout[0].length;
-        brickHeight = 150 / layout.length;
+        if (layout == null || layout.length == 0 || layout[0].length == 0) {
+            // 빈 배열인 경우 기본값으로 설정하거나 예외 처리
+            map = new int[0][0]; // 빈 배열 유지
+            brickWidth = 0;
+            brickHeight = 0;
+        } else {
+            map = layout;
+            brickWidth = 540 / layout[0].length;
+            brickHeight = 150 / layout.length;
+        }
     }
-
+    
     public void setBrickLayout(int[][] layout) {
         map = layout;
     }

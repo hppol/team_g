@@ -25,6 +25,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private LifeSystem lifeSystem;
     private int lives;
     private boolean isPaddleGrown = false; // 페달 크기 증가 상태
+    private Boss boss;
 
 
     private Paddle paddle;
@@ -57,10 +58,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     }
     
 
-    private void loadLevel() {
-        Level currentLevel = levelManager.getCurrentLevel();
-        map = new MapGenerator(currentLevel.getBrickLayout());
-        ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
+    private void initializeLevel() {
+        Level currentLevel = levelManager.getCurrentLevel(); // 현재 레벨 가져오기
+        map = new MapGenerator(currentLevel.getBrickLayout()); // 벽돌 배열 로드
+        ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY()); // 공의 속도 설정
+        boss = currentLevel.getBoss(); // 보스 정보 가져오기
     }
     
     public void startCountdown() {
@@ -120,7 +122,25 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         showStartMessage = true;
         repaint();
     }
+    
+    private void loadLevel() {
+        Level currentLevel = levelManager.getCurrentLevel();
 
+        // 벽돌 배열이 있을 경우에만 MapGenerator 초기화
+        if (currentLevel.getBrickLayout() != null && currentLevel.getBrickLayout().length > 0) {
+            map = new MapGenerator(currentLevel.getBrickLayout());
+        } else {
+            map = null; // 벽돌이 없는 경우 null 처리
+        }
+
+        ball.setSpeed(currentLevel.getBallSpeedX(), currentLevel.getBallSpeedY());
+        boss = currentLevel.getBoss(); // 보스 정보 가져오기
+        
+        timeLeft = 60;
+
+        // 공 초기화
+        resetBallAndPaddle();
+    }
 
 
     public void paint(Graphics g) {
@@ -143,6 +163,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         // 벽돌
         if (map != null) {
             map.draw((Graphics2D) g);
+        }
+        
+        if (boss != null) {
+            boss.draw(g);
         }
 
         // 패들
@@ -173,8 +197,22 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (play) {
         	if (!gameOver) {
-                ball.move();
-            }
+        		ball.move(); // 공 이동 처리
+
+                // 보스와 공 충돌 처리
+                if (boss != null) {
+                    if (boss.isHit(ball)) {
+                        boss.reduceHealth();
+                        ball.reverseY();
+
+                        if (boss.isDefeated()) {
+                            boss = null; // 보스 제거
+                            play = false;
+                            score += 50; // 보스 처치 점수
+                        }
+                    }
+                }
+
 
             // 공과 패들 충돌
             if (ball.checkCollision(paddle)) {
@@ -207,7 +245,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             }
 
             // 모든 벽돌 제거 시 다음 레벨로 이동
-            if (map.isAllBricksDestroyed()) {
+            if (map.isAllBricksDestroyed() && boss == null) {
                 if (levelManager.hasNextLevel()) {
                     levelManager.moveToNextLevel();
                     loadLevel();
@@ -220,6 +258,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         }
 
         repaint();
+        }
     }
     
     private void triggerBombEffect(Ball ball) {

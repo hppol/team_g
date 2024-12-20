@@ -1,12 +1,14 @@
 public class Level {
-    private int[][] brickLayout; 
-    private int ballSpeedX; 
-    private int ballSpeedY; 
+    private int[][] brickLayout;
+    private int ballSpeedX;
+    private int ballSpeedY;
+    private Boss boss; // 보스 정보
 
-    public Level(int[][] brickLayout, int ballSpeedX, int ballSpeedY) {
+    public Level(int[][] brickLayout, int ballSpeedX, int ballSpeedY, Boss boss) {
         this.brickLayout = brickLayout;
         this.ballSpeedX = ballSpeedX;
         this.ballSpeedY = ballSpeedY;
+        this.boss = boss;
     }
 
     public int[][] getBrickLayout() {
@@ -31,5 +33,9 @@ public class Level {
 
 	public void setBallSpeedY(int ballSpeedY) {
 		this.ballSpeedY = ballSpeedY;
+	}
+	
+	public Boss getBoss() {
+        return boss;
 	}
 }
