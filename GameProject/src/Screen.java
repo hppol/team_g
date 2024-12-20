@@ -192,6 +192,19 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             g.drawString("Press Enter to Restart", 190, 350);
         }
     }
+    
+    private void applyDebuffToPaddle() {
+        // 예: 패들의 이동 속도를 느리게 하기
+        paddle.setWidth(paddle.getWidth() - 30); // 패들의 크기를 줄임
+        if (paddle.getWidth() < 50) { // 최소 크기 제한
+            paddle.setWidth(50);
+        }
+
+        // 일정 시간 후 원래 상태로 복원
+        Timer restoreTimer = new Timer(5000, evt -> paddle.resetSize()); // 5초 후 복원
+        restoreTimer.setRepeats(false);
+        restoreTimer.start();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -201,18 +214,31 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
                 // 보스와 공 충돌 처리
                 if (boss != null) {
-                         
-                    if (boss.isHit(ball)) {
-                        boss.reduceHealth();
-                        ball.reverseY();
+                        boss.checkDebuffLaunch(); // 디버프 공 발사
+                        boss.moveDebuffBalls();   // 디버프 공 이동
+                        
+                        
+                        
 
-                        if (boss.isDefeated()) {
-                            boss = null; // 보스 제거
-                            play = false;
-                            score += 50; // 보스 처치 점수
+                        // 디버프 공과 패들 충돌 처리
+                        for (DebuffBall debuffBall : boss.getDebuffBalls()) {
+                            if (debuffBall.isColliding(paddle)) { // 충돌 여부 확인
+                                debuffBall.deactivate(); // 디버프 공 비활성화
+                                applyDebuffToPaddle();   // 패들에 디버프 적용
+                            }
                         }
-                    }
-                }
+
+                        // 보스와 공의 충돌 처리
+                        if (boss.isHit(ball)) {
+                            boss.reduceHealth();
+                            ball.reverseY();
+
+                            if (boss.isDefeated()) {
+                                boss = null; // 보스 제거
+                                play = false;
+                                score += 50; // 보스 처치 점수
+                            }
+                        }
 
 
             // 공과 패들 충돌
@@ -260,6 +286,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
         repaint();
         }
+    }
     }
     
     
