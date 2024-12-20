@@ -19,21 +19,20 @@ public class LevelManager {
             2, -3, null // 보스 없음
         ));
 
-        levels.add(new Level(
-            new int[][]{
-                {1, 0, 1, 0, 1, 0, 1},
-                {1, 1, 1, 1, 1, 1, 1},
-                {1, 0, 1, 0, 1, 0, 1}
-            },
-            3, -3, null // 보스 없음
-        ));
+        int screenWidth = 700; // 화면 너비
+        int screenHeight = 300; // 화면 높이
 
-        // 보스 레벨 추가
+        int bossWidth = (int) (screenWidth * 0.8); // 가로 크기: 화면 너비의 80%
+        int bossHeight = (int) (screenHeight * 0.4); // 세로 크기: 화면 높이의 20%
+
+        int bossX = (screenWidth - bossWidth) / 2; // 화면 가운데 정렬
+        int bossY = (screenHeight - bossHeight) / 2; // 화면 가운데 정렬
+
         levels.add(new Level(
-        	    new int[1][1], // 1x1 배열로 설정 (실제로는 벽돌 없음)
-        	    4, -4,
-        	    new Boss(200, 100, 200, 50, 5) // 보스 정보
-        	));
+            new int[1][1], // 1x1 배열로 설정 (실제로는 벽돌 없음)
+            4, -4,
+            new Boss(bossX, bossY, bossWidth, bossHeight, 20) // 보스 정보
+        ));
         
         levels.add(new Level(
                 new int[][]{

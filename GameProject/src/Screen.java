@@ -201,6 +201,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
                 // 보스와 공 충돌 처리
                 if (boss != null) {
+                         
                     if (boss.isHit(ball)) {
                         boss.reduceHealth();
                         ball.reverseY();
@@ -260,6 +261,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         repaint();
         }
     }
+    
     
     private void triggerBombEffect(Ball ball) {
         int ballX = ball.getX();

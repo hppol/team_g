@@ -1,8 +1,13 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Boss {
     private int x, y, width, height, health;
+    private List<DebuffBall> debuffBalls; // 디버프 공 리스트
+    private long lastDebuffTime; // 마지막 디버프 발사 시간
+    private static final long DEBUFF_INTERVAL = 5000; // 디버프 발사 간격 (밀리초)
 
     public Boss(int x, int y, int width, int height, int health) {
         this.x = x;
@@ -10,6 +15,8 @@ public class Boss {
         this.width = width;
         this.height = height;
         this.health = health;
+        this.debuffBalls = new ArrayList<>();
+        this.lastDebuffTime = System.currentTimeMillis();
     }
 
     public void draw(Graphics g) {
@@ -27,7 +34,33 @@ public class Boss {
             // 보스의 테두리
             g.setColor(Color.BLACK);
             g.drawRect(x, y, width, height);
+            
+            for (DebuffBall ball : debuffBalls) {
+                ball.draw(g);
+            }
         }
+    }
+    
+    public void moveDebuffBalls() {
+        // 디버프 공 이동
+        for (DebuffBall ball : debuffBalls) {
+            ball.move();
+        }
+    }
+    
+    public void checkDebuffLaunch() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastDebuffTime >= DEBUFF_INTERVAL) {
+            // 디버프 공 발사
+            int ballX = x + width / 2 - 10; // 보스의 중앙에서 발사
+            int ballY = y + height;
+            debuffBalls.add(new DebuffBall(ballX, ballY, 20, 3));
+            lastDebuffTime = currentTime;
+        }
+    }
+    
+    public List<DebuffBall> getDebuffBalls() {
+        return debuffBalls;
     }
 
     public boolean isHit(Ball ball) {
