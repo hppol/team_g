@@ -68,9 +68,37 @@ public class Boss {
         int ballY = ball.getY();
         int ballDiameter = ball.getDiameter();
 
-        // 충돌 여부 확인
-        return ballX + ballDiameter > x && ballX < x + width &&
-               ballY + ballDiameter > y && ballY < y + height;
+        // 보스의 경계 계산
+        boolean hit = ballX + ballDiameter > x && ballX < x + width &&
+                      ballY + ballDiameter > y && ballY < y + height;
+
+        if (hit) {
+            // 충돌 방향 판별
+            boolean hitTop = ballY + ballDiameter - ball.getSpeedY() <= y;
+            boolean hitBottom = ballY - ball.getSpeedY() >= y + height;
+            boolean hitLeft = ballX + ballDiameter - ball.getSpeedX() <= x;
+            boolean hitRight = ballX - ball.getSpeedX() >= x + width;
+
+            if (hitTop || hitBottom) {
+                ball.reverseY(); // 위 또는 아래에서 충돌 시 Y축 반전
+            }
+            if (hitLeft || hitRight) {
+                ball.reverseX(); // 왼쪽 또는 오른쪽에서 충돌 시 X축 반전
+            }
+
+            // 공의 위치 보정 (보스 경계 바깥으로 이동)
+            if (hitTop) {
+                ball.setY(y - ballDiameter); // 보스 상단 바깥으로 이동
+            } else if (hitBottom) {
+                ball.setY(y + height); // 보스 하단 바깥으로 이동
+            } else if (hitLeft) {
+                ball.setX(x - ballDiameter); // 보스 왼쪽 바깥으로 이동
+            } else if (hitRight) {
+                ball.setX(x + width); // 보스 오른쪽 바깥으로 이동
+            }
+        }
+
+        return hit;
     }
 
     public void reduceHealth() {
@@ -82,4 +110,24 @@ public class Boss {
     public boolean isDefeated() {
         return health <= 0;
     }
+
+	public int getX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -208,71 +208,83 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (play) {
-        	if (!gameOver) {
-        		ball.move(); // 공 이동 처리
+        if (!play || gameOver) {
+            return; // 게임이 실행 중이 아니거나 종료 상태면 반환
+        }
 
-                // 보스와 공 충돌 처리
-                if (boss != null) {
-                        boss.checkDebuffLaunch(); // 디버프 공 발사
-                        boss.moveDebuffBalls();   // 디버프 공 이동
-                        
-                        
-                        
+        // 보스 로직 처리
+        handleBossLogic();
 
-                        // 디버프 공과 패들 충돌 처리
-                        for (DebuffBall debuffBall : boss.getDebuffBalls()) {
-                            if (debuffBall.isColliding(paddle)) { // 충돌 여부 확인
-                                debuffBall.deactivate(); // 디버프 공 비활성화
-                                applyDebuffToPaddle();   // 패들에 디버프 적용
-                            }
-                        }
+        // 공과 패들의 충돌 처리
+        if (ball.checkCollision(paddle)) {
+            ball.bounceOffPaddle(paddle);
+        }
 
-                        // 보스와 공의 충돌 처리
-                        if (boss.isHit(ball)) {
-                            boss.reduceHealth();
-                            ball.reverseY();
+        // 벽돌과 공의 충돌 처리
+        handleBrickCollision();
 
-                            if (boss.isDefeated()) {
-                                boss = null; // 보스 제거
-                                play = false;
-                                score += 50; // 보스 처치 점수
-                            }
-                        }
+        // 공이 바닥에 닿은 경우 처리
+        if (ball.getY() > 570) {
+            handleBallOutOfBounds();
+        }
 
+        // 레벨 완료 상태 확인
+        checkLevelCompletion();
 
-            // 공과 패들 충돌
-            if (ball.checkCollision(paddle)) {
-                ball.bounceOffPaddle(paddle);
+        // 공 이동 및 화면 갱신
+        ball.move();
+        repaint();
+    }
+    
+    private void checkLevelCompletion() {
+        if (map != null && map.isAllBricksDestroyed() && boss == null) {
+            if (levelManager.hasNextLevel()) {
+                levelManager.moveToNextLevel();
+                loadLevel();
+            } else {
+                play = false;
+                gameOver = true;
             }
+        }
+    }
+    
+    private void handleBrickCollision() {
+        if (map == null) {
+            return; // 벽돌이 없는 경우 처리하지 않음
+        }
 
-            // 공과 벽돌 또는 아이템 블록 충돌
-            int blockType = map.hitBrick(ball); // 블록 유형 반환
-            
-            if (blockType == 1) {
-                score += 5; // 일반 벽돌 점수 증가
-                File file = new File("res/break.wav");
-    			playBreakSound(file);
-                
-
-                
-            } else if (blockType == 2) {
-                paddle.grow(); // 아이템 블록: 페달 크기 증가
-                
-            } else if (blockType == 3) {
-                triggerBombEffect(ball); // 폭탄 블록: 폭발 효과
+        int blockType = map.hitBrick(ball);
+        switch (blockType) {
+            case 1: // 일반 벽돌
+                score += 5;
+                playBreakSound(new File("res/break.wav"));
+                break;
+            case 2: // 아이템 블록
+                paddle.grow();
+                break;
+            case 3: // 폭탄 블록
+                triggerBombEffect(ball);
                 score += 15;
-                File file = new File("res/bomb.wav");
-    			playBombSound(file);
-            }
+                playBombSound(new File("res/bomb.wav"));
+                break;
+            default:
+                break; // 충돌하지 않은 경우
+        }
+    }
+    
+    private void handleBossLogic() {
+        if (boss == null) {
+            return; // 보스가 없는 경우 처리하지 않음
+        }
 
-            // 공이 바닥에 닿으면 게임 종료
-            if (ball.getY() > 570) {
-               handleBallOutOfBounds();
-            }
+        // 보스와 공 충돌
+        if (boss.isHit(ball)) {
+            boss.reduceHealth();
 
-            // 모든 벽돌 제거 시 다음 레벨로 이동
-            if (map.isAllBricksDestroyed() && boss == null) {
+            if (boss.isDefeated()) {
+                score += 50;
+                boss = null;
+
                 if (levelManager.hasNextLevel()) {
                     levelManager.moveToNextLevel();
                     loadLevel();
@@ -280,14 +292,23 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                     play = false;
                     gameOver = true;
                 }
-
+                return; // 레벨 전환 후 추가 처리를 중단
             }
         }
 
-        repaint();
+        // 디버프 공 발사 및 이동
+        boss.checkDebuffLaunch();
+        boss.moveDebuffBalls();
+
+        // 디버프 공과 패들 충돌 처리
+        for (DebuffBall debuffBall : boss.getDebuffBalls()) {
+            if (debuffBall.isColliding(paddle)) {
+                debuffBall.deactivate();
+                applyDebuffToPaddle();
+            }
         }
     }
-    }
+
     
     
     private void triggerBombEffect(Ball ball) {

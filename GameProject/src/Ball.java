@@ -130,4 +130,14 @@ public class Ball {
 	public void setSpeedY(int speedY) {
 		this.speedY = speedY;
 	}
+
+	public double getWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
