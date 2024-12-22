@@ -31,7 +31,7 @@ public class LevelManager {
         levels.add(new Level(
             new int[1][1], // 1x1 배열로 설정 (실제로는 벽돌 없음)
             4, -4,
-            new Boss(bossX, bossY, bossWidth, bossHeight, 20) // 보스 정보
+            new Boss(bossX, bossY, bossWidth, bossHeight, 5) // 보스 정보
         ));
         
         levels.add(new Level(

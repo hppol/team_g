@@ -21,6 +21,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     private int delay = 8;
     private int timeLeft = 60; // 타이머 시작 시간 (초 단위)
     private Timer countdownTimer;
+    private AchievementManager achievementManager; // 업적 관리
+    private GameState gameState; // 게임 상태 관리
     
     private LifeSystem lifeSystem;
     private int lives;
@@ -41,6 +43,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     	this.themeManager = themeManager;
     	this.leaderboard = leaderboard;
     	this.music = music;
+        this.gameState = new GameState(3); // 초기 생명값 설정
+    	this.achievementManager = new AchievementManager(); // 업적 관리 객체 초기화
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(350, 520, 20, 0, 0);
@@ -255,6 +259,9 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         }
 
         int blockType = map.hitBrick(ball);
+        if (blockType > 0) {
+            gameState.incrementBricksDestroyed();
+            checkAchievements();
         switch (blockType) {
             case 1: // 일반 벽돌
                 score += 5;
@@ -271,7 +278,9 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             default:
                 break; // 충돌하지 않은 경우
         }
+        return;
     }
+  }
     
     private void handleBossLogic() {
         if (boss == null) {
@@ -283,8 +292,12 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             boss.reduceHealth();
 
             if (boss.isDefeated()) {
+            	gameState.setBossDefeated(true);
+            	checkAchievements();
                 score += 50;
+                
                 boss = null;
+                
 
                 if (levelManager.hasNextLevel()) {
                     levelManager.moveToNextLevel();
@@ -293,7 +306,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                     play = false;
                     gameOver = true;
                 }
-                return; // 레벨 전환 후 추가 처리를 중단
+           
+                return;
             }
         }
 
@@ -310,6 +324,18 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         }
     }
 
+    
+    private void checkAchievements() {
+        for (Achievement achievement : achievementManager.getAchievements()) {
+            if (!achievement.isAchieved()) { // 아직 달성되지 않은 업적만 확인
+                achievementManager.checkAchievements(gameState); // 업적 조건 확인
+                if (achievement.isAchieved()) {
+                    System.out.println("업적 달성됨: " + achievement.getName()); // 디버깅 메시지
+                    AchievementUI.showAchievementUnlocked(achievement); // 업적 달성 알림
+                }
+            }
+        }
+    }
     
     
     private void triggerBombEffect(Ball ball) {
@@ -420,6 +446,7 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (gameOver) {
             leaderboard.addScore(score); // 점수 추가
         }
+        gameState.reset();
         score = 0;
         gameOver = false;
         timeLeft = 60; // 타이머 초기화
@@ -445,6 +472,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (levelManager.hasNextLevel()) {
             levelManager.moveToNextLevel();
             loadLevel();
+            gameState.setLevelCompleted(true);
+            checkAchievements();
             
             // 공 초기화 (패들의 위치에서 시작하도록)
             ball.reset(paddle);  // 공을 패들의 중앙 위치로 초기화
@@ -454,6 +483,8 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             play = false;
             gameOver = true; // 모든 레벨 완료
         }
+        
+        checkAchievements();
     }
 
     
