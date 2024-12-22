@@ -168,4 +168,12 @@ public class Title extends JPanel {
     public void setBrickImage(BufferedImage brickImage) {
         this.brickImage = brickImage;
     }
+
+	public ThemeManager getThemeManager() {
+		return themeManager;
+	}
+
+	public void setThemeManager(ThemeManager themeManager) {
+		this.themeManager = themeManager;
+	}
 }

@@ -130,4 +130,44 @@ public class Boss {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public long getLastDebuffTime() {
+		return lastDebuffTime;
+	}
+
+	public void setLastDebuffTime(long lastDebuffTime) {
+		this.lastDebuffTime = lastDebuffTime;
+	}
+
+	public static long getDebuffInterval() {
+		return DEBUFF_INTERVAL;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setDebuffBalls(List<DebuffBall> debuffBalls) {
+		this.debuffBalls = debuffBalls;
+	}
 }

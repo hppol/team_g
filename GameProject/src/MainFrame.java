@@ -6,14 +6,16 @@ public class MainFrame extends JFrame {
     private Title titlePanel;
     private ThemeManager themeManager;
     private MainFrame mainframe;
+    private Music music;
     
     public MainFrame() {
         // ThemeManager와 Leaderboard 초기화
         themeManager = new ThemeManager();
         leaderboard = new Leaderboard();
+        music = new Music();
 
         // 메뉴바 설정
-        Menu menu = new Menu(leaderboard, themeManager);
+        Menu menu = new Menu(leaderboard, themeManager, music);
         setJMenuBar(menu.getMenuBar());
 
         // Title 화면 생성 및 추가
@@ -36,7 +38,7 @@ public class MainFrame extends JFrame {
 
 
         // Screen 생성 및 추가
-        screen = new Screen(this, leaderboard, themeManager);
+        screen = new Screen(this, leaderboard, themeManager, music);
         add(screen);
         
         screen.showPressEnterMessage();
@@ -62,6 +64,36 @@ public class MainFrame extends JFrame {
 
 	public void setTitlePanel(Title titlePanel) {
 		this.titlePanel = titlePanel;
+	}
+
+
+	public Leaderboard getLeaderboard() {
+		return leaderboard;
+	}
+
+
+	public void setLeaderboard(Leaderboard leaderboard) {
+		this.leaderboard = leaderboard;
+	}
+
+
+	public ThemeManager getThemeManager() {
+		return themeManager;
+	}
+
+
+	public void setThemeManager(ThemeManager themeManager) {
+		this.themeManager = themeManager;
+	}
+
+
+	public MainFrame getMainframe() {
+		return mainframe;
+	}
+
+
+	public void setMainframe(MainFrame mainframe) {
+		this.mainframe = mainframe;
 	}
 	
 }

@@ -74,4 +74,12 @@ public class Leaderboard {
     public List<Integer> getScores() {
         return scores;
     }
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setScores(List<Integer> scores) {
+		this.scores = scores;
+	}
 }

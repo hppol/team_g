@@ -28,4 +28,20 @@ public class Theme {
     public Color getBrickColor() {
         return brickColor;
     }
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public void setPaddleColor(Color paddleColor) {
+		this.paddleColor = paddleColor;
+	}
+
+	public void setBallColor(Color ballColor) {
+		this.ballColor = ballColor;
+	}
+
+	public void setBrickColor(Color brickColor) {
+		this.brickColor = brickColor;
+	}
 }

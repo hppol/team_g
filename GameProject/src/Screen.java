@@ -37,9 +37,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
  // Music 객체 추가
     private Music music;
 
-    public Screen(JFrame frame, Leaderboard leaderboard, ThemeManager themeManager) {
+    public Screen(JFrame frame, Leaderboard leaderboard, ThemeManager themeManager, Music music) {
     	this.themeManager = themeManager;
     	this.leaderboard = leaderboard;
+    	this.music = music;
     	lives = 3;
         paddle = new Paddle(310, 550, 100, 8);
         ball = new Ball(350, 520, 20, 0, 0);
@@ -496,4 +497,204 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyTyped(KeyEvent e) {}
+
+
+	public boolean isPlay() {
+		return play;
+	}
+
+
+	public void setPlay(boolean play) {
+		this.play = play;
+	}
+
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
+
+	public void setGameStarted(boolean gameStarted) {
+		this.gameStarted = gameStarted;
+	}
+
+
+	public boolean isShowStartMessage() {
+		return showStartMessage;
+	}
+
+
+	public void setShowStartMessage(boolean showStartMessage) {
+		this.showStartMessage = showStartMessage;
+	}
+
+
+	public int getScore() {
+		return score;
+	}
+
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
+
+	public Leaderboard getLeaderboard() {
+		return leaderboard;
+	}
+
+
+	public void setLeaderboard(Leaderboard leaderboard) {
+		this.leaderboard = leaderboard;
+	}
+
+
+	public int getDelay() {
+		return delay;
+	}
+
+
+	public void setDelay(int delay) {
+		this.delay = delay;
+	}
+
+
+	public int getTimeLeft() {
+		return timeLeft;
+	}
+
+
+	public void setTimeLeft(int timeLeft) {
+		this.timeLeft = timeLeft;
+	}
+
+
+	public Timer getCountdownTimer() {
+		return countdownTimer;
+	}
+
+
+	public void setCountdownTimer(Timer countdownTimer) {
+		this.countdownTimer = countdownTimer;
+	}
+
+
+	public LifeSystem getLifeSystem() {
+		return lifeSystem;
+	}
+
+
+	public void setLifeSystem(LifeSystem lifeSystem) {
+		this.lifeSystem = lifeSystem;
+	}
+
+
+	public int getLives() {
+		return lives;
+	}
+
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
+
+
+	public boolean isPaddleGrown() {
+		return isPaddleGrown;
+	}
+
+
+	public void setPaddleGrown(boolean isPaddleGrown) {
+		this.isPaddleGrown = isPaddleGrown;
+	}
+
+
+	public Boss getBoss() {
+		return boss;
+	}
+
+
+	public void setBoss(Boss boss) {
+		this.boss = boss;
+	}
+
+
+	public Paddle getPaddle() {
+		return paddle;
+	}
+
+
+	public void setPaddle(Paddle paddle) {
+		this.paddle = paddle;
+	}
+
+
+	public Ball getBall() {
+		return ball;
+	}
+
+
+	public void setBall(Ball ball) {
+		this.ball = ball;
+	}
+
+
+	public MapGenerator getMap() {
+		return map;
+	}
+
+
+	public void setMap(MapGenerator map) {
+		this.map = map;
+	}
+
+
+	public LevelManager getLevelManager() {
+		return levelManager;
+	}
+
+
+	public void setLevelManager(LevelManager levelManager) {
+		this.levelManager = levelManager;
+	}
+
+
+	public ThemeManager getThemeManager() {
+		return themeManager;
+	}
+
+
+	public void setThemeManager(ThemeManager themeManager) {
+		this.themeManager = themeManager;
+	}
+
+
+	public Music getMusic() {
+		return music;
+	}
+
+
+	public void setMusic(Music music) {
+		this.music = music;
+	}
 }

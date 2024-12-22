@@ -69,4 +69,12 @@ public class ThemeManager {
     public HashMap<String, Theme> getThemes() {
         return themes;
     }
+
+	public void setThemes(HashMap<String, Theme> themes) {
+		this.themes = themes;
+	}
+
+	public void setCurrentTheme(Theme currentTheme) {
+		this.currentTheme = currentTheme;
+	}
 }

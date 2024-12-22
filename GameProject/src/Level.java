@@ -38,4 +38,8 @@ public class Level {
 	public Boss getBoss() {
         return boss;
 	}
+
+	public void setBoss(Boss boss) {
+		this.boss = boss;
+	}
 }
