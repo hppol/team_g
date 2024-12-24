@@ -568,6 +568,11 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
 
 	public void setPlay(boolean play) {
 		this.play = play;
+		if(play) {
+			timer.start();
+		} else {
+			timer.stop();
+		}
 	}
 
 

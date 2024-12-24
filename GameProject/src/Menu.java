@@ -60,10 +60,23 @@ public class Menu {
         });
 
         resumeGameItem.addActionListener(e -> {
-            if (mainFrame.getScreen() != null) {
-                mainFrame.getScreen().resumeGame(); // 게임 재개
-                JOptionPane.showMessageDialog(null, "Game resumed!");
-            }
+            // "Resume Game" 메시지를 띄우고, OK 버튼 클릭 후 3초 딜레이
+        	int result = JOptionPane.showConfirmDialog(
+        		    null,
+        		    "Game will resume in 3 seconds...",
+        		    "Resuming Game",
+        		    JOptionPane.OK_CANCEL_OPTION,
+        		    JOptionPane.INFORMATION_MESSAGE
+        		);
+
+        		if (result == JOptionPane.OK_OPTION) {
+        		    // 메시지 창이 닫힌 후 3초 타이머 시작
+        		    Timer delayTimer = new Timer(3000, evt -> {
+        		        mainFrame.resumeGame(); // 3초 후 게임 재개
+        		    });
+        		    delayTimer.setRepeats(false); // 한 번만 실행
+        		    delayTimer.start();
+        		}
         });
         exitItem.addActionListener(e -> System.exit(0));
 

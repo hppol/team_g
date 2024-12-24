@@ -51,6 +51,18 @@ public class MainFrame extends JFrame {
         repaint();
         screen.requestFocusInWindow(); // 포커스 요청
     }
+    
+    public void pauseGame() {
+        if (screen != null) {
+            screen.setPlay(false); // Screen에서 play 상태를 멈춤
+        }
+    }
+
+    public void resumeGame() {
+        if (screen != null) {
+            screen.setPlay(true); // Screen에서 play 상태를 재개
+        }
+    }
 
 	public Screen getScreen() {
 		return screen;
