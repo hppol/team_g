@@ -15,9 +15,11 @@ public class MainFrame extends JFrame {
         music = new Music();
 
         // 메뉴바 설정
-        Menu menu = new Menu(leaderboard, themeManager, music);
+        Menu menu = new Menu(leaderboard, themeManager, music, this);
         setJMenuBar(menu.getMenuBar());
 
+
+        
         // Title 화면 생성 및 추가
         titlePanel = new Title(this, themeManager); // MainFrame 객체 전달
         add(titlePanel);

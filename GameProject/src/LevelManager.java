@@ -12,7 +12,7 @@ public class LevelManager {
         // 일반 레벨 추가
         levels.add(new Level(
             new int[][]{
-                {1, 1, 1, 1, 3, 1, 1, 3, 1},
+                {1, 1, 1, 1, 3, 1, 1, 3, 4},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {1, 1, 1, 3, 1, 1, 1, 1, 3},
             },
@@ -36,7 +36,7 @@ public class LevelManager {
         
         levels.add(new Level(
                 new int[][]{
-                    {1, 0, 1, 0, 1, 0, 1},
+                    {1, 0, 1, 0, 1, 0, 4},
                     {1, 1, 1, 1, 1, 1, 1},
                     {1, 0, 1, 0, 1, 0, 1}
                 },

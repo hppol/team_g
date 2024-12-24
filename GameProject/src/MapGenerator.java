@@ -48,6 +48,8 @@ public class MapGenerator {
                         g.setColor(Color.blue); // 아이템 블록
                     } else if (map[i][j] == 3) {
                         g.setColor(Color.red); // 폭탄 블록
+                    } else if (map[i][j] == 4) {
+                        g.setColor(Color.GREEN); // 생명 추가 블록
                     }
                     g.fillRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
 

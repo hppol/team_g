@@ -92,6 +92,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
         if (lives <= 0) {
             play = false; // 게임 중지
             gameOver = true; // 게임 오버 처리
+            timer.stop();
+            if(countdownTimer != null) {
+            	countdownTimer.stop();
+            }
             lives = 3; // 생명 리셋
         } else {
             // 공과 패들 위치 초기화
@@ -214,7 +218,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!play || gameOver) {
-            return; // 게임이 실행 중이 아니거나 종료 상태면 반환
+        	if(gameOver){
+        		timer.stop();
+        	}
+        	return; // 게임이 실행 중이 아니거나 종료 상태면 반환
         }
 
         // 보스 로직 처리
@@ -274,6 +281,10 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
                 triggerBombEffect(ball);
                 score += 15;
                 playBombSound(new File("res/bomb.wav"));
+                break;
+            case 4: // 생명 추가 블록
+                lives++; // 생명 1 추가
+                playBreakSound(new File("res/break.wav")); // 생명 추가 효과음 (선택 사항)
                 break;
             default:
                 break; // 충돌하지 않은 경우
@@ -465,8 +476,28 @@ public class Screen extends JPanel implements KeyListener, ActionListener {
             countdownTimer.stop(); // 기존 타이머 중지
         }
         startCountdown(); // 새로운 타이머 시작
+        timer.start();
+    }
+    
+    public void pauseGame() {
+        play = false;
+        if (timer != null) {
+            timer.stop();
+        }
+        if (countdownTimer != null) {
+            countdownTimer.stop();
+        }
     }
 
+    public void resumeGame() {
+        play = true;
+        if (timer != null) {
+            timer.start();
+        }
+        if (countdownTimer != null) {
+            countdownTimer.start();
+        }
+    }
     
     private void moveToNextLevel() {
         if (levelManager.hasNextLevel()) {

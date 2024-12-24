@@ -6,8 +6,9 @@ public class Menu {
     private Leaderboard leaderboard;
     private ThemeManager themeManager;
     private Music music;
+    private MainFrame mainFrame;
 
-    public Menu(Leaderboard leaderboard, ThemeManager themeManager, Music music) {
+    public Menu(Leaderboard leaderboard, ThemeManager themeManager, Music music, MainFrame mainFrame) {
         if (leaderboard == null) {
             throw new IllegalArgumentException("Leaderboard cannot be null");
         }
@@ -19,6 +20,7 @@ public class Menu {
         this.leaderboard = leaderboard;
         this.themeManager = themeManager;
         this.music = music;
+        this.mainFrame = mainFrame;
 
         menuBar = new JMenuBar();
 
@@ -50,8 +52,19 @@ public class Menu {
         exitItem.setToolTipText("Exit the application.");
 
         newGameItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "New Game started!"));
-        pauseGameItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "Game paused!"));
-        resumeGameItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "Game resumed!"));
+        pauseGameItem.addActionListener(e -> {
+            if (mainFrame.getScreen() != null) {
+                mainFrame.getScreen().pauseGame(); // 게임 일시정지
+                JOptionPane.showMessageDialog(null, "Game paused!");
+            }
+        });
+
+        resumeGameItem.addActionListener(e -> {
+            if (mainFrame.getScreen() != null) {
+                mainFrame.getScreen().resumeGame(); // 게임 재개
+                JOptionPane.showMessageDialog(null, "Game resumed!");
+            }
+        });
         exitItem.addActionListener(e -> System.exit(0));
 
         fileMenu.add(newGameItem);
