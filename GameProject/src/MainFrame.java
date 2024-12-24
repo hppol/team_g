@@ -63,6 +63,17 @@ public class MainFrame extends JFrame {
             screen.setPlay(true); // Screen에서 play 상태를 재개
         }
     }
+    
+    public void showTitleScreen() {
+        if (screen != null) {
+            remove(screen); // 게임 화면 제거
+            screen = null;  // 참조 해제
+        }
+        titlePanel = new Title(this, themeManager); // 타이틀 화면 생성
+        add(titlePanel);
+        validate(); // 컴포넌트 갱신
+        repaint();  // 화면 다시 그리기
+    }
 
 	public Screen getScreen() {
 		return screen;

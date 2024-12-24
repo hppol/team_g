@@ -40,6 +40,7 @@ public class Menu {
         JMenuItem newGameItem = new JMenuItem("New Game");
         JMenuItem pauseGameItem = new JMenuItem("Pause Game");
         JMenuItem resumeGameItem = new JMenuItem("Resume Game");
+        JMenuItem goToTItleItem = new JMenuItem("Go to Title");
         JMenuItem exitItem = new JMenuItem("Exit");
 
         newGameItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
@@ -48,6 +49,8 @@ public class Menu {
         pauseGameItem.setToolTipText("Pause the game.");
         resumeGameItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
         resumeGameItem.setToolTipText("Resume the paused game.");
+        goToTItleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK));
+        goToTItleItem.setToolTipText("Return to the title screen.");
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
         exitItem.setToolTipText("Exit the application.");
 
@@ -78,11 +81,17 @@ public class Menu {
         		    delayTimer.start();
         		}
         });
+        
+        goToTItleItem.addActionListener(e -> {
+            mainFrame.showTitleScreen(); // 타이틀 화면으로 이동
+        });
+        
         exitItem.addActionListener(e -> System.exit(0));
 
         fileMenu.add(newGameItem);
         fileMenu.add(pauseGameItem);
         fileMenu.add(resumeGameItem);
+        fileMenu.add(goToTItleItem);
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
 
@@ -97,7 +106,25 @@ public class Menu {
 
         aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "Brick Breaker Game - Version 1.0"));
         leaderboardItem.addActionListener(e -> leaderboard.displayLeaderboard(null));
-        howToPlayItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "Use the paddle to break all the bricks!"));
+        howToPlayItem.addActionListener(e -> JOptionPane.showMessageDialog(null, 
+        		"Game Objective\r\n"
+        				+ "Players aim to bounce the ball and break all the bricks. The key is to achieve a high score within limited opportunities.\r\n"
+        				+ "\r\n"
+        				+ "How to Play\r\n"
+        				+ "\r\n"
+        				+ "Control the paddle to reflect the ball and hit the bricks.\r\n"
+        				+ "Earn points as bricks are destroyed, and prevent the ball from falling below the screen.\r\n"
+        				+ "Some special bricks drop items that can help you gain advantages.\r\n"
+        				+ "Features and Strategies\r\n"
+        				+ "\r\n"
+        				+ "Bricks come in various types, each with different durability. Some require multiple hits to break.\r\n"
+        				+ "The reflection angle of the ball depends on where it hits the paddle, requiring strategic play.\r\n"
+        				+ "Experience various effects, such as extending the paddle length or adjusting the ball's speed, through items.\r\n"
+        				+ "Challenges\r\n"
+        				+ "The difficulty increases progressively, demanding quick decisions and precise control to achieve high scores.\r\n"
+        				+ "\r\n"
+        				+ ""));
+
 
         helpMenu.add(leaderboardItem);
         helpMenu.add(howToPlayItem);
